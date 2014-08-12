@@ -1,0 +1,31 @@
+2014-08-10 17:28:56.409 frontendAwesome[69984:80b] Multi-tasking -> Device: YES, App: YES
+2014-08-10 17:28:56.817 frontendAwesome[69984:80b] Unlimited access to network resources
+2014-08-10 17:29:00.122 frontendAwesome[69984:80b] [CDVTimer][keyboard] 0.097036ms
+2014-08-10 17:29:00.123 frontendAwesome[69984:80b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-08-10 17:29:00.123 frontendAwesome[69984:80b] [CDVTimer][statusbar] 0.536025ms
+2014-08-10 17:29:00.124 frontendAwesome[69984:80b] [CDVTimer][TotalPluginStartup] 1.658976ms
+2014-08-10 17:29:02.122 frontendAwesome[69984:80b] Resetting plugins due to page load.
+2014-08-10 17:29:03.126 frontendAwesome[69984:80b] Finished load of: file:///Users/vasanthsanil/Library/Application%20Support/iPhone%20Simulator/7.0.3/Applications/5909F09C-058A-43B9-866A-255B561A2CE0/frontendAwesome.app/www/index.html#/app/playlists
+2014-08-10 17:29:03.891 frontendAwesome[69984:80b] THREAD WARNING: ['Device'] took '34.148926' ms. Plugin should use a background thread.
+2014-08-11 17:37:35.994 frontendAwesome[2980:70b] Multi-tasking -> Device: YES, App: YES
+2014-08-11 17:37:36.779 frontendAwesome[2980:70b] Unlimited access to network resources
+2014-08-11 17:37:43.426 frontendAwesome[2980:70b] [CDVTimer][keyboard] 7.847011ms
+2014-08-11 17:37:43.435 frontendAwesome[2980:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-08-11 17:37:43.435 frontendAwesome[2980:70b] [CDVTimer][statusbar] 0.674963ms
+2014-08-11 17:37:43.436 frontendAwesome[2980:70b] [CDVTimer][TotalPluginStartup] 17.221987ms
+2014-08-11 17:37:44.676 frontendAwesome[2980:70b] Resetting plugins due to page load.
+2014-08-11 17:37:46.005 frontendAwesome[2980:70b] Finished load of: file:///Users/vasanthsanil/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/55E3F747-56F4-49CD-AA2F-7573D1014BAA/frontendAwesome.app/www/index.html#/app/playlists
+2014-08-11 18:25:15.297 frontendAwesome[2980:70b] Doing login [object Object]
+2014-08-11 18:25:15.327 frontendAwesome[2980:70b] THREAD WARNING: ['Console'] took '29.980957' ms. Plugin should use a background thread.
+2014-08-11 18:25:15.742 frontendAwesome[2980:70b] Doing login [object Object]
+2014-08-11 18:32:18.175 frontendAwesome[2980:70b] Doing login [object Object]
+2014-08-11 18:32:18.199 frontendAwesome[2980:70b] THREAD WARNING: ['Console'] took '24.142090' ms. Plugin should use a background thread.
+2014-08-11 19:45:23.205 iRecall[9004:70b] Multi-tasking -> Device: YES, App: YES
+2014-08-11 19:45:23.456 iRecall[9004:70b] Unlimited access to network resources
+2014-08-11 19:45:23.808 iRecall[9004:70b] Fix applied for database locations?: YES
+2014-08-11 19:45:25.888 iRecall[9004:70b] [CDVTimer][keyboard] 0.092983ms
+2014-08-11 19:45:25.889 iRecall[9004:70b] CDVPlugin class CDVStatusBar (pluginName: statusbar) does not exist.
+2014-08-11 19:45:25.889 iRecall[9004:70b] [CDVTimer][statusbar] 0.441968ms
+2014-08-11 19:45:25.890 iRecall[9004:70b] [CDVTimer][TotalPluginStartup] 1.546979ms
+2014-08-11 19:45:27.991 iRecall[9004:70b] Resetting plugins due to page load.
+2014-08-11 19:45:29.120 iRecall[9004:70b] Finished load of: file:///Users/vasanthsanil/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/9D7FD454-50C7-4A27-AFB8-8C628E1AAB42/iRecall.app/www/index.html#/app/playlists
