@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', ['ionic', 'starter.controllers','http-auth-interceptor'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -20,6 +20,24 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   });
 })
 
+// .run(function ($rootScope, $location, Auth) {
+
+//     //watching the value of the currentUser variable.
+//     $rootScope.$watch('currentUser', function(currentUser) {
+//       // if no currentUser and on a page that requires authorization then try to update it
+//       // will trigger 401s if user does not have a valid session
+//       if (!currentUser && (['/', '/signin', '/signup'].indexOf($location.path()) == -1 )) {
+//         Auth.currentUser();
+//       }
+//     });
+
+//     // On catching 401 errors, redirect to the login page.
+//     $rootScope.$on('event:auth-loginRequired', function() {
+//       $location.path('/login');
+//       return false;
+//     });
+//   })
+
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
@@ -28,6 +46,42 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       abstract: true,
       templateUrl: "templates/menu.html",
       controller: 'AppCtrl'
+    })
+
+.state('app.auth', {
+      url: '/auth',
+      abstract: true,
+      
+      templateUrl: 'templates/auth.html'
+      
+    })
+  .state('app.signin', {
+      url: '/signin',
+      views: {
+        'signin': {
+          templateUrl: 'templates/auth-signin.html',
+          controller: 'SignInCtrl'
+        }
+      }
+    })
+    .state('app.signup', {
+      url: '/signup',
+      views: {
+        'signup': {
+          templateUrl: 'templates/auth-signup.html',
+          controller: 'SignUpCtrl'
+        }
+      }
+    })
+
+    .state('app.login', {
+      url: "/login",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/login.html"
+
+        }
+      }
     })
 
     .state('app.search', {
@@ -67,6 +121,7 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  //$urlRouterProvider.otherwise('/app/Search');
+  $urlRouterProvider.otherwise('/app/signin');
 });
 

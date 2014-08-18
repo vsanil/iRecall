@@ -40,9 +40,49 @@ angular.module('starter.controllers', [])
     { title: 'Dubstep', id: 3 },
     { title: 'Indie', id: 4 },
     { title: 'Rap', id: 5 },
-    { title: 'Motown', id: 6 }
+    { title: 'Techno', id: 6 }
   ];
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
+})
+
+.controller('SignInCtrl', function($scope, $stateParams) {
+   $scope.user = {
+        email: "",
+        password: ""
+      };
+      $scope.createUser = function () {
+        var email = this.user.email;
+        var password = this.user.password;
+ 
+        if (!email || !password) {
+          $rootScope.notify("Please enter valid credentials");
+          return false;
+        }
+ 
+        $rootScope.show('Please wait.. Registering');
+        $rootScope.auth.$createUser(email, password, function (error, user) {
+          if (!error) {
+            $rootScope.hide();
+            $rootScope.userEmail = user.email;
+            $window.location.href = ('#/bucket/list');
+          }
+          else {
+            $rootScope.hide();
+            if (error.code == 'INVALID_EMAIL') {
+              $rootScope.notify('Invalid Email Address');
+            }
+            else if (error.code == 'EMAIL_TAKEN') {
+              $rootScope.notify('Email Address already taken');
+            }
+            else {
+              $rootScope.notify('Oops something went wrong. Please try again later');
+            }
+          }
+        });
+      }
+    
 });
+
+

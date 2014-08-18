@@ -1,4 +1,6 @@
 var gulp = require('gulp');
+var nodemon = require('gulp-nodemon');
+var jshint = require('gulp-jshint');
 var gutil = require('gulp-util');
 var bower = require('bower');
 var concat = require('gulp-concat');
@@ -8,10 +10,25 @@ var rename = require('gulp-rename');
 var sh = require('shelljs');
 
 var paths = {
-  sass: ['./scss/**/*.scss']
+  sass: ['./scss/**/*.scss'],
+  
+  scripts: [
+    './www/app/scripts/**/*.js',
+    './www/app/scripts/app.js'
+  ],
+  
+  html: [
+  './www/app/views/partials/*.html',
+  './www/app/views/partials/**/*.html',
+  '/www/index.html',
+  '/www/templates/*.html'
+  ],
+ 
+  server: {
+    js: ['./lib/**/*.js'],
+    specs: ['./server.js']
+  }
 };
-
-gulp.task('default', ['sass']);
 
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
@@ -25,8 +42,23 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
+gulp.task('scripts', function() {
+    return gulp.src('js/*.js')
+        .pipe(concat('all.js'))
+        .pipe(gulp.dest('dist'))
+        .pipe(rename('all.min.js'))
+});
+
+gulp.task('html', function() {
+    return gulp.src(paths.html)
+        .pipe(gulp.dest(''))
+        .pipe(notify({ message: 'HTML task complete' }));
+});
+
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.html, ['html']);
+  gulp.watch(paths.scripts, ['lint', 'scripts']);
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -48,3 +80,14 @@ gulp.task('git-check', function(done) {
   }
   done();
 });
+
+gulp.task('lint', function () {
+  gulp.src(paths.scripts)
+    .pipe(jshint())
+});
+
+gulp.task('server', function () {
+  nodemon({ script: 'server.js'})
+});
+
+gulp.task('default', ['server', 'sass', 'scripts', 'lint', 'watch']); 
