@@ -32,7 +32,7 @@ var pass = require('./lib/config/pass');
 
 app.configure('development', function(){
   app.use(express.static(path.join(__dirname, '.tmp')));
-  app.use(express.static(path.join(__dirname, 'www/')));
+  app.use(express.static(path.join(__dirname, 'www')));
   app.use(express.errorHandler());
   app.set('views', __dirname + '/www');
 });

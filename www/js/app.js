@@ -4,7 +4,14 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','http-auth-interceptor'])
+angular.module('angularPassportApp', [
+  'ionic',
+  'http-auth-interceptor', 
+  'ngCookies',
+  'ngResource',
+  'ngSanitize',
+  'ngRoute',
+  'ui.bootstrap'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -41,35 +48,45 @@ angular.module('starter', ['ionic', 'starter.controllers','http-auth-interceptor
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
-    .state('app', {
-      url: "/app",
-      abstract: true,
-      templateUrl: "templates/menu.html",
-      controller: 'AppCtrl'
-    })
+    // .state('app', {
+    //   url: "/app",
+    //   //abstract: true,
+    //   templateUrl: "templates/auth-signin.html",
+    //   controller: 'LoginCtrl'
+    // })
 
-.state('app.auth', {
-      url: '/auth',
+  .state('app', {
+      url: '/app',
       abstract: true,
-      
       templateUrl: 'templates/auth.html'
       
     })
+  // .state('app.signin', {
+  //     url: '/signin',
+  //     views: {
+  //       'signin': {
+  //         templateUrl: 'templates/auth-signin.html',
+  //         controller: 'SignInCtrl'
+  //       }
+  //     }
+  //   })
+
   .state('app.signin', {
-      url: '/signin',
+      url: "/signin",
       views: {
-        'signin': {
-          templateUrl: 'templates/auth-signin.html',
-          controller: 'SignInCtrl'
+        'auth-signin' :{
+          templateUrl: "templates/auth-signin.html",
+          controller: 'LoginCtrl'
         }
       }
     })
+
     .state('app.signup', {
       url: '/signup',
       views: {
-        'signup': {
+        'auth-signup': {
           templateUrl: 'templates/auth-signup.html',
-          controller: 'SignUpCtrl'
+          controller: 'SignupCtrl'
         }
       }
     })
