@@ -3,7 +3,7 @@
 angular.module('angularPassportApp')
   .controller('SignupCtrl', function ($scope, Auth, $location) {
     $scope.register = function(form) {
-      console.log($scope.user);
+      console.log('Hello: ' + $scope.user.email);
       Auth.createUser({
           email: $scope.user.email,
           username: $scope.user.username,
