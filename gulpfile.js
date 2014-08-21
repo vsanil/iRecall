@@ -8,11 +8,12 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var notify = require('gulp-notify');
 
 var paths = {
   sass: [
     './scss/*.scss',
-    './www/app/styles/*.scss'
+    './www/app/styles/main.scss'
     ],
   
   scripts: [
@@ -23,8 +24,8 @@ var paths = {
   html: [
   './www/app/views/partials/*.html',
   './www/app/views/partials/**/*.html',
-  '/www/index.html',
-  '/www/templates/*.html'
+  './www/index.html',
+  './www/templates/*.html'
   ],
  
   server: {
@@ -33,21 +34,55 @@ var paths = {
   }
 };
 
+// A display error function, to format and make custom errors more uniform
+// Could be combined with gulp-util or npm colors for nicer output
+var displayError = function(error) {
+
+    // Initial building up of the error
+    var errorString = '[' + error.plugin + ']';
+    errorString += ' ' + error.message.replace("\n",''); // Removes new line at the end
+
+    // If the error contains the filename or line number add it to the string
+    if(error.fileName)
+        errorString += ' in ' + error.fileName;
+
+    if(error.lineNumber)
+        errorString += ' on line ' + error.lineNumber;
+
+    // This will output an error like the following:
+    // [gulp-sass] error message in file_name on line 1
+    console.error(errorString);
+}
+
 gulp.task('sass', function(done) {
-  gulp.src('./scss/ionic.app.scss')
-    .pipe(sass())
+  gulp.src(paths.sass)
+    .pipe(sass({ style: 'expanded' }))
+    .on('error', function(err){
+        displayError(err);
+    })
     .pipe(gulp.dest('./www/css/'))
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
-    .pipe(rename({ extname: '.min.css' }))
+    // .pipe(rename('main.css'))
     .pipe(gulp.dest('./www/css/'))
     .on('end', done);
 });
 
+// gulp.task('sass', function(done) {
+//   gulp.src('./scss/ionic.app.scss')
+//     .pipe(sass())
+//     .pipe(gulp.dest('./www/css/'))
+//     .pipe(minifyCss({
+//       keepSpecialComments: 0
+//     }))
+//     .pipe(rename({ extname: '.min.css' }))
+//     .pipe(gulp.dest('./www/css/'))
+//     .on('end', done);
+// });
+
 gulp.task('scripts', function() {
-    return gulp.src('js/*.js')
-        .pipe(concat('all.js'))
+    return gulp.src(paths.scripts)
         .pipe(gulp.dest('dist'))
         .pipe(rename('all.min.js'))
 });
