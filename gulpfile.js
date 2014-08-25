@@ -11,19 +11,20 @@ var sh = require('shelljs');
 var notify = require('gulp-notify');
 
 var paths = {
+  build   : './dist/',
   sass: [
-    './scss/*.scss',
-    './www/app/styles/main.scss'
+    //'./scss/*.scss',
+    './www/css/*.scss'
     ],
   
   scripts: [
-    './www/app/scripts/**/*.js',
-    './www/app/scripts/app.js'
+    './www/js/**/*.js',
+    './www/js/app.js'
   ],
   
   html: [
-  './www/app/views/partials/*.html',
-  './www/app/views/partials/**/*.html',
+  // './www/app/views/partials/*.html',
+  // './www/app/views/partials/**/*.html',
   './www/index.html',
   './www/templates/*.html'
   ],
@@ -57,40 +58,31 @@ var displayError = function(error) {
 gulp.task('sass', function(done) {
   gulp.src(paths.sass)
     .pipe(sass({ style: 'expanded' }))
-    .on('error', function(err){
-        displayError(err);
-    })
-    .pipe(gulp.dest('./www/css/'))
+    .pipe(gulp.dest(paths.build))
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
-    // .pipe(rename('main.css'))
     .pipe(gulp.dest('./www/css/'))
-    .on('end', done);
+    .pipe(gulp.dest(paths.build))
+    .on("error", notify.onError(function (error) {
+        return "Message to the notifier: " + error.message;
+      }));
 });
-
-// gulp.task('sass', function(done) {
-//   gulp.src('./scss/ionic.app.scss')
-//     .pipe(sass())
-//     .pipe(gulp.dest('./www/css/'))
-//     .pipe(minifyCss({
-//       keepSpecialComments: 0
-//     }))
-//     .pipe(rename({ extname: '.min.css' }))
-//     .pipe(gulp.dest('./www/css/'))
-//     .on('end', done);
-// });
 
 gulp.task('scripts', function() {
     return gulp.src(paths.scripts)
-        .pipe(gulp.dest('dist'))
-        .pipe(rename('all.min.js'))
+        .pipe(gulp.dest(paths.build))
+        .on("error", notify.onError(function (error) {
+        return "Message to the notifier: " + error.message;
+      }));
 });
 
 gulp.task('html', function() {
     return gulp.src(paths.html)
-        .pipe(gulp.dest(''))
-        .pipe(notify({ message: 'HTML task complete' }));
+        .pipe(gulp.dest(paths.build))
+        .on("error", notify.onError(function (error) {
+        return "Message to the notifier: " + error.message;
+      }));
 });
 
 gulp.task('watch', function() {
@@ -122,10 +114,15 @@ gulp.task('git-check', function(done) {
 gulp.task('lint', function () {
   gulp.src(paths.scripts)
     .pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'))
+    .on("error", notify.onError(function (error) {
+        return "Message to the notifier: " + error.message;
+      }));
 });
 
 gulp.task('server', function () {
-  nodemon({ script: 'server.js'})
+  nodemon({ script: paths.server.specs, nodeArgs: ['--debug'] })
 });
 
-gulp.task('default', ['server', 'sass', 'scripts', 'lint', 'watch']); 
+gulp.task('default', ['lint', 'sass', 'html', 'scripts', 'watch','server']);
+// gulp.task('default', ['server', 'sass', 'html', 'scripts', 'lint', 'watch']); 

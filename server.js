@@ -37,15 +37,15 @@ app.configure('development', function(){
   app.set('views', __dirname + '/www');
 });
 
-app.configure('production', function(){
-  app.use(express.favicon(path.join(__dirname, 'public', 'favicon.ico')));
-  app.use(express.static(path.join(__dirname, 'public')));
-  app.set('views', __dirname + '/www/app/views');
-});
+// app.configure('production', function(){
+//   app.use(express.favicon(path.join(__dirname, 'public', 'favicon.ico')));
+//   app.use(express.static(path.join(__dirname, 'public')));
+//   app.set('views', __dirname + '/www/app/views');
+// });
 
-app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
-app.use(express.logger('dev'));
+ app.engine('html', require('ejs').renderFile);
+ app.set('view engine', 'html');
+ app.use(express.logger('dev'));
 
 // cookieParser should be above session
 app.use(express.cookieParser());

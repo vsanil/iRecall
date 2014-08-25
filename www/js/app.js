@@ -13,39 +13,25 @@ angular.module('angularPassportApp', [
   'ngRoute',
   'ui.bootstrap'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if(window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
-  });
-})
-
 // .run(function ($rootScope, $location, Auth) {
 
 //     //watching the value of the currentUser variable.
 //     $rootScope.$watch('currentUser', function(currentUser) {
 //       // if no currentUser and on a page that requires authorization then try to update it
 //       // will trigger 401s if user does not have a valid session
-//       if (!currentUser && (['/', '/signin', '/signup'].indexOf($location.path()) == -1 )) {
+//       if (!currentUser && (['/app', 'app/signin', 'app/signup'].indexOf($location.path()) == -1 )) {
 //         Auth.currentUser();
 //       }
 //     });
 
 //     // On catching 401 errors, redirect to the login page.
 //     $rootScope.$on('event:auth-loginRequired', function() {
-//       $location.path('/login');
+//       $location.path('app/signin');
 //       return false;
 //     });
 //   })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider/*, $routeProvider, $locationProvider*/) {
   $stateProvider
 
     // .state('app', {
@@ -71,6 +57,7 @@ angular.module('angularPassportApp', [
   //     }
   //   })
 
+
   .state('app.signin', {
       url: "/signin",
       views: {
@@ -91,15 +78,15 @@ angular.module('angularPassportApp', [
       }
     })
 
-    .state('app.login', {
-      url: "/login",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/login.html"
+    // .state('app.login', {
+    //   url: "/login",
+    //   views: {
+    //     'menuContent' :{
+    //       templateUrl: "templates/login.html"
 
-        }
-      }
-    })
+    //     }
+    //   }
+    // })
 
     .state('app.search', {
       url: "/search",
@@ -140,5 +127,38 @@ angular.module('angularPassportApp', [
   // if none of the above states are matched, use this as the fallback
   //$urlRouterProvider.otherwise('/app/Search');
   $urlRouterProvider.otherwise('/app/signin');
+  //$locationProvider.html5Mode(true);
+})
+
+.run(function($ionicPlatform, $rootScope, $location, Auth) {
+  $ionicPlatform.ready(function() {
+    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+    // for form inputs)
+    if(window.cordova && window.cordova.plugins.Keyboard) {
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+    }
+    if(window.StatusBar) {
+      // org.apache.cordova.statusbar required
+      StatusBar.styleDefault();
+    }
+  });
+
+
+    //watching the value of the currentUser variable.
+    $rootScope.$watch('currentUser', function(currentUser) {
+      // if no currentUser and on a page that requires authorization then try to update it
+      // will trigger 401s if user does not have a valid session
+      if (!currentUser && (['/app', 'app/signin', 'app/signup'].indexOf($location.path()) == -1 )) {
+        Auth.currentUser();
+      }
+    });
+
+    // On catching 401 errors, redirect to the login page.
+    $rootScope.$on('event:auth-loginRequired', function() {
+      $location.path('app/signin');
+      return false;
+    });
+
 });
+
 
