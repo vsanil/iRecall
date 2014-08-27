@@ -11,7 +11,7 @@ var sh = require('shelljs');
 var notify = require('gulp-notify');
 
 var paths = {
-  build   : './dist/',
+  build   : './build/',
   sass: [
     //'./scss/*.scss',
     './www/css/*.scss'
@@ -121,7 +121,11 @@ gulp.task('lint', function () {
 });
 
 gulp.task('server', function () {
-  nodemon({ script: paths.server.specs, nodeArgs: ['--debug'] })
+  nodemon({ nodeArgs: ['--debug'], script: paths.server.specs,
+            ext: 'js html', 
+            env: { 'NODE_ENV': 'development' } , 
+            ignore: ['./build/**'],
+             })
 });
 
 gulp.task('default', ['lint', 'sass', 'html', 'scripts', 'watch','server']);
