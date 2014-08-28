@@ -25,3 +25,23 @@ angular.module('angularPassportApp')
       });
     };
   });
+
+//AUTH0
+//   .controller('LoginCtrl', function($scope, auth, $state) {
+//   auth.signin({
+//     // This is a must for mobile projects
+//     popup: true,
+//     // Make the widget non closeable
+//     standalone: true,
+//     // This asks for the refresh token
+//     // So that the user never has to log in again
+//     offline_mode: true,
+//     device: 'Phone'
+//   }, function() {
+//     // Login was successful
+//     $state.go('tab.dash');
+//   }, function(error) {
+//     // Oops something went wrong during login:
+//     console.log("There was an error logging in", error);
+//   });
+// })

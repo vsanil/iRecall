@@ -42,6 +42,7 @@
 		99A460BC53E74A07AFCFC091 /* UIWebViewExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 32B5426DE2AD440A816E511A /* UIWebViewExtension.m */; };
 		33EA97E5D80D422C9652B561 /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = CFF9BB1894374F99A6B4B386 /* CDVLogger.m */; };
 		75E21603F02846E6997AB2F1 /* CDVDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = FDC8068408A0483D98E99DAC /* CDVDevice.m */; };
+		6E286F01A8BE4564B387E467 /* CDVInAppBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DC2FECF20944BA8C610503 /* CDVInAppBrowser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +115,8 @@
 		6D1EA9FB3BE74AC3BEE3084E /* CDVLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVLogger.h"; path = "org.apache.cordova.console/CDVLogger.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		FDC8068408A0483D98E99DAC /* CDVDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVDevice.m"; path = "org.apache.cordova.device/CDVDevice.m"; sourceTree = "<group>"; fileEncoding = 4; };
 		9901E21AAA32400792D26D1D /* CDVDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVDevice.h"; path = "org.apache.cordova.device/CDVDevice.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		56DC2FECF20944BA8C610503 /* CDVInAppBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVInAppBrowser.m"; path = "org.apache.cordova.inappbrowser/CDVInAppBrowser.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		92D441228FF1436695A5456A /* CDVInAppBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVInAppBrowser.h"; path = "org.apache.cordova.inappbrowser/CDVInAppBrowser.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,6 +245,8 @@
 				6D1EA9FB3BE74AC3BEE3084E /* CDVLogger.h */,
 				FDC8068408A0483D98E99DAC /* CDVDevice.m */,
 				9901E21AAA32400792D26D1D /* CDVDevice.h */,
+				56DC2FECF20944BA8C610503 /* CDVInAppBrowser.m */,
+				92D441228FF1436695A5456A /* CDVInAppBrowser.h */,
 			);
 			name = Plugins;
 			path = "iRecall/Plugins";
@@ -440,6 +445,7 @@
 				99A460BC53E74A07AFCFC091 /* UIWebViewExtension.m in Sources */,
 				33EA97E5D80D422C9652B561 /* CDVLogger.m in Sources */,
 				75E21603F02846E6997AB2F1 /* CDVDevice.m in Sources */,
+				6E286F01A8BE4564B387E467 /* CDVInAppBrowser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
