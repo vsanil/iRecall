@@ -11,20 +11,19 @@ angular.module('angularPassportApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ui.bootstrap', 'auth0'])
+  'ui.bootstrap' /*, 'auth0'*/])
 
-
-.config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider/*, $routeProvider, $locationProvider*/) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider /*authProvider, $routeProvider, $locationProvider*/) {
   //AUTH0
   //$httpProvider.interceptors.push('authInterceptor');
 
-  authProvider
-  .init({
-    domain: 'vsanil.auth0.com',
-    clientID: 'Ux3wy1yE8EmsvRJwRdrxERXwilngwHxW',
-      callbackURL: location.href,
-      loginState: 'login'
-    });
+  // authProvider
+  // .init({
+  //   domain: 'vsanil.auth0.com',
+  //   clientID: 'Ux3wy1yE8EmsvRJwRdrxERXwilngwHxW',
+  //     callbackURL: location.href,
+  //     loginState: 'login'
+  //   });
 
   $stateProvider
 
@@ -116,7 +115,7 @@ angular.module('angularPassportApp', [
   //$locationProvider.html5Mode(true);
 })
 
-.run(function($ionicPlatform, $rootScope, $location, Auth, auth) {
+.run(function($ionicPlatform, $rootScope, $location, Auth/*, auth*/) {
   //AUTH0
   //auth.hookEvents();
 
