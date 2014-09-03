@@ -14,7 +14,7 @@ angular.module('angularPassportApp')
           $scope.errors = {};
 
           if (!err) {
-            $location.path('/');
+            $location.path('/app/search');
           } else {
             angular.forEach(err.errors, function(error, field) {
               form[field].$setValidity('mongoose', false);
