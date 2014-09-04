@@ -15,7 +15,7 @@ angular.module('angularPassportApp')
     $scope.logout = function() {
       Auth.logout(function(err) {
         if(!err) {
-          $location.path('/login');
+          $location.path('auth/signin');
         }
       });
     };

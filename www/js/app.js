@@ -45,25 +45,26 @@ angular.module('angularPassportApp', [
   //     }
   //   })
 
+.state('/', {
+      url: '/',
+      templateUrl: 'templates/main.html',
+      controller: 'MainCtrl'
+    })
+
   .state('auth', {
       url: '/auth',
       abstract: true,
       templateUrl: 'templates/auth.html'
-      
     })
-
-
   .state('auth.signin', {
       url: "/signin",
       views: {
         'auth-signin' :{
-          templateUrl: "templates/auth-signin.html"
-           ,
+          templateUrl: "templates/auth-signin.html",
            controller: 'LoginCtrl'
         }
       }
     })
-
     .state('auth.signup', {
       url: '/signup',
       views: {
@@ -77,35 +78,37 @@ angular.module('angularPassportApp', [
     .state('app', {
                 url: "/app",
                 abstract: true,
-                templateUrl: "templates/menu.html"
+                templateUrl: "templates/menu.html",
+                controller: 'NavbarCtrl'
     })
     .state('app.search', {
       url: "/search",
       views: {
-        'app-search' :{
-          templateUrl: "templates/search.html"
+        'menuContent' :{
+          templateUrl: "templates/search.html",
+          controller: 'SignupCtrl'
         }
       }
     })
+    .state('app.new', {
+      url: "/new",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/new.html",
+          controller: 'SignupCtrl'
+        }
+      }
+    });
     
-    // .state('app.browse', {
-    //   url: "/browse",
+    // .state('app.logout', {
+    //   url: "/logout",
     //   views: {
-    //     'menuContent' :{
-    //       templateUrl: "templates/browse.html"
+    //     'menuContent' : {
+    //       templateUrl: "templates/auth-signin.html",
+    //      controller: "NavbarCtrl"
     //     }
-    //   }
-    // })
-    // .state('app.playlists', {
-    //   url: "/playlists",
-    //   views: {
-    //     'menuContent' :{
-    //       templateUrl: "templates/playlists.html",
-    //       controller: 'PlaylistsCtrl'
-    //     }
-    //   }
-    // })
-
+    //   } 
+    // });
     // .state('app.single', {
     //   url: "/playlists/:playlistId",
     //   views: {
