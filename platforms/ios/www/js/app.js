@@ -4,9 +4,129 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('angularPassportApp', [
+  'ionic',
+  'http-auth-interceptor', 
+  'ngCookies',
+  'ngResource',
+  'ngSanitize',
+  'ngRoute',
+  'ui.bootstrap' /*, 'auth0'*/])
 
-.run(function($ionicPlatform) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider /*authProvider, $routeProvider, $locationProvider*/) {
+  //AUTH0
+  //$httpProvider.interceptors.push('authInterceptor');
+
+  // authProvider
+  // .init({
+  //   domain: 'vsanil.auth0.com',
+  //   clientID: 'Ux3wy1yE8EmsvRJwRdrxERXwilngwHxW',
+  //     callbackURL: location.href,
+  //     loginState: 'login'
+  //   });
+
+  $stateProvider
+
+  // AUTH0
+  // .state('login', {
+  //     url: '/login',
+  //     templateUrl: 'templates/login-auth.html',
+  //     controller: 'LoginCtrl',
+  //   })
+  //   // Your app states
+  //   .state('tab', {
+  //     url: "/tab",
+  //     abstract: true,
+  //     templateUrl: "templates/tabs.html",
+  //     // This state requires users to be logged in
+  //       // If they're not they'll be redirected to the login state
+  //     data: {
+  //       requiresLogin: true
+  //     }
+  //   })
+
+.state('/', {
+      url: '/',
+      templateUrl: 'templates/main.html',
+      controller: 'MainCtrl'
+    })
+
+  .state('auth', {
+      url: '/auth',
+      abstract: true,
+      templateUrl: 'templates/auth.html'
+    })
+  .state('auth.signin', {
+      url: "/signin",
+      views: {
+        'auth-signin' :{
+          templateUrl: "templates/auth-signin.html",
+           controller: 'LoginCtrl'
+        }
+      }
+    })
+    .state('auth.signup', {
+      url: '/signup',
+      views: {
+        'auth-signup': {
+          templateUrl: 'templates/auth-signup.html',
+          controller: 'SignupCtrl'
+        }
+      }
+    })
+
+    .state('app', {
+                url: "/app",
+                abstract: true,
+                templateUrl: "templates/menu.html",
+                controller: 'NavbarCtrl'
+    })
+    .state('app.search', {
+      url: "/search",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/search.html",
+          controller: 'SignupCtrl'
+        }
+      }
+    })
+    .state('app.new', {
+      url: "/new",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/new.html",
+          controller: 'SignupCtrl'
+        }
+      }
+    });
+    
+    // .state('app.logout', {
+    //   url: "/logout",
+    //   views: {
+    //     'menuContent' : {
+    //       templateUrl: "templates/auth-signin.html",
+    //      controller: "NavbarCtrl"
+    //     }
+    //   } 
+    // });
+    // .state('app.single', {
+    //   url: "/playlists/:playlistId",
+    //   views: {
+    //     'menuContent' :{
+    //       templateUrl: "templates/playlist.html",
+    //       controller: 'PlaylistCtrl'
+    //     }
+    //   }
+    // });
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('auth/signin');
+  //$locationProvider.html5Mode(true);
+})
+
+.run(function($ionicPlatform, $rootScope, $location, Auth/*, auth*/) {
+  //AUTH0
+  //auth.hookEvents();
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,56 +137,23 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-  });
-})
+  })
 
-.config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider
-
-    .state('app', {
-      url: "/app",
-      abstract: true,
-      templateUrl: "templates/menu.html",
-      controller: 'AppCtrl'
-    })
-
-    .state('app.search', {
-      url: "/search",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/search.html"
-        }
-      }
-    })
-
-    .state('app.browse', {
-      url: "/browse",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/browse.html"
-        }
-      }
-    })
-    .state('app.playlists', {
-      url: "/playlists",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/playlists.html",
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-    .state('app.single', {
-      url: "/playlists/:playlistId",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/playlist.html",
-          controller: 'PlaylistCtrl'
-        }
+    //watching the value of the currentUser variable.
+    $rootScope.$watch('currentUser', function(currentUser) {
+      // if no currentUser and on a page that requires authorization then try to update it
+      // will trigger 401s if user does not have a valid session
+      if (!currentUser && (['/app', 'auth/signin', 'auth/signup'].indexOf($location.path()) == -1 )) {
+        Auth.currentUser();
       }
     });
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+
+    // On catching 401 errors, redirect to the login page.
+    $rootScope.$on('event:auth-loginRequired', function() {
+      $location.path('auth/signin');
+      return false;
+    });
+
 });
+
 

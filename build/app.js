@@ -45,26 +45,27 @@ angular.module('angularPassportApp', [
   //     }
   //   })
 
-  .state('app', {
-      url: '/app',
-      abstract: true,
-      templateUrl: 'templates/auth.html'
-      
+.state('/', {
+      url: '/',
+      templateUrl: 'templates/main.html',
+      controller: 'MainCtrl'
     })
 
-
-  .state('app.signin', {
+  .state('auth', {
+      url: '/auth',
+      abstract: true,
+      templateUrl: 'templates/auth.html'
+    })
+  .state('auth.signin', {
       url: "/signin",
       views: {
         'auth-signin' :{
-          templateUrl: "templates/auth-signin.html"
-           ,
+          templateUrl: "templates/auth-signin.html",
            controller: 'LoginCtrl'
         }
       }
     })
-
-    .state('app.signup', {
+    .state('auth.signup', {
       url: '/signup',
       views: {
         'auth-signup': {
@@ -74,44 +75,51 @@ angular.module('angularPassportApp', [
       }
     })
 
+    .state('app', {
+                url: "/app",
+                abstract: true,
+                templateUrl: "templates/menu.html",
+                controller: 'NavbarCtrl'
+    })
     .state('app.search', {
       url: "/search",
       views: {
         'menuContent' :{
-          templateUrl: "templates/search.html"
+          templateUrl: "templates/search.html",
+          controller: 'SignupCtrl'
         }
       }
     })
-
-    .state('app.browse', {
-      url: "/browse",
+    .state('app.new', {
+      url: "/new",
       views: {
         'menuContent' :{
-          templateUrl: "templates/browse.html"
-        }
-      }
-    })
-    .state('app.playlists', {
-      url: "/playlists",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/playlists.html",
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-    .state('app.single', {
-      url: "/playlists/:playlistId",
-      views: {
-        'menuContent' :{
-          templateUrl: "templates/playlist.html",
-          controller: 'PlaylistCtrl'
+          templateUrl: "templates/new.html",
+          controller: 'SignupCtrl'
         }
       }
     });
+    
+    // .state('app.logout', {
+    //   url: "/logout",
+    //   views: {
+    //     'menuContent' : {
+    //       templateUrl: "templates/auth-signin.html",
+    //      controller: "NavbarCtrl"
+    //     }
+    //   } 
+    // });
+    // .state('app.single', {
+    //   url: "/playlists/:playlistId",
+    //   views: {
+    //     'menuContent' :{
+    //       templateUrl: "templates/playlist.html",
+    //       controller: 'PlaylistCtrl'
+    //     }
+    //   }
+    // });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('app/signin');
+  $urlRouterProvider.otherwise('auth/signin');
   //$locationProvider.html5Mode(true);
 })
 
@@ -135,14 +143,14 @@ angular.module('angularPassportApp', [
     $rootScope.$watch('currentUser', function(currentUser) {
       // if no currentUser and on a page that requires authorization then try to update it
       // will trigger 401s if user does not have a valid session
-      if (!currentUser && (['/app', 'app/signin', 'app/signup'].indexOf($location.path()) == -1 )) {
+      if (!currentUser && (['/app', 'auth/signin', 'auth/signup'].indexOf($location.path()) == -1 )) {
         Auth.currentUser();
       }
     });
 
     // On catching 401 errors, redirect to the login page.
     $rootScope.$on('event:auth-loginRequired', function() {
-      $location.path('app/signin');
+      $location.path('auth/signin');
       return false;
     });
 
