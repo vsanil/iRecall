@@ -85,8 +85,9 @@ angular.module('angularPassportApp', [
       url: "/search",
       views: {
         'menuContent' :{
-          templateUrl: "templates/search.html",
-          controller: 'SignupCtrl'
+          templateUrl: "templates/search.html"
+          // ,
+          // controller: 'SignupCtrl'
         }
       }
     })
@@ -94,12 +95,13 @@ angular.module('angularPassportApp', [
       url: "/new",
       views: {
         'menuContent' :{
-          templateUrl: "templates/new.html",
-          controller: 'SignupCtrl'
+          templateUrl: "templates/new.html"
+          // ,
+          // controller: 'SignupCtrl'
         }
       }
     });
-    
+
     // .state('app.logout', {
     //   url: "/logout",
     //   views: {
@@ -143,7 +145,7 @@ angular.module('angularPassportApp', [
     $rootScope.$watch('currentUser', function(currentUser) {
       // if no currentUser and on a page that requires authorization then try to update it
       // will trigger 401s if user does not have a valid session
-      if (!currentUser && (['/app', 'auth/signin', 'auth/signup'].indexOf($location.path()) == -1 )) {
+      if (!currentUser && (['/', 'auth/signin', 'auth/signup'].indexOf($location.path()) == -1 )) {
         Auth.currentUser();
       }
     });
