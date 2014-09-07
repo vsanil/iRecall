@@ -128,5 +128,4 @@ gulp.task('server', function () {
              })
 });
 
-gulp.task('default', ['lint', 'sass', 'html', 'scripts', 'watch','server']);
-// gulp.task('default', ['server', 'sass', 'html', 'scripts', 'lint', 'watch']); 
+gulp.task('default', ['lint', 'sass', 'html', 'scripts', 'watch']);

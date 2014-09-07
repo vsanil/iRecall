@@ -45,16 +45,16 @@ angular.module('angularPassportApp', [
   //     }
   //   })
 
-.state('/', {
-      url: '/',
-      templateUrl: 'templates/main.html',
-      controller: 'MainCtrl'
-    })
+// .state('/', {
+//       url: '/',
+//       templateUrl: 'templates/main.html',
+//       controller: 'MainCtrl'
+//     })
 
   .state('auth', {
       url: '/auth',
       abstract: true,
-      templateUrl: 'templates/auth.html'
+      templateUrl: 'templates/auth-tab.html'
     })
   .state('auth.signin', {
       url: "/signin",
@@ -75,17 +75,23 @@ angular.module('angularPassportApp', [
       }
     })
 
-    .state('app', {
-                url: "/app",
-                abstract: true,
-                templateUrl: "templates/menu.html",
-                controller: 'NavbarCtrl'
+  .state('app', {
+      url: '/app',
+      abstract: true,
+      templateUrl: 'templates/app-tab.html',
+      controller: 'NavbarCtrl'
     })
+    // .state('app', {
+    //             url: "/app",
+    //             abstract: true,
+    //             templateUrl: "templates/menu.html",
+    //             controller: 'NavbarCtrl'
+    // })
     .state('app.search', {
       url: "/search",
       views: {
-        'menuContent' :{
-          templateUrl: "templates/search.html"
+        'app-search' :{
+          templateUrl: "templates/app-search.html"
           // ,
           // controller: 'SignupCtrl'
         }
@@ -94,8 +100,8 @@ angular.module('angularPassportApp', [
     .state('app.new', {
       url: "/new",
       views: {
-        'menuContent' :{
-          templateUrl: "templates/new.html"
+        'app-new' :{
+          templateUrl: "templates/app-new.html"
           // ,
           // controller: 'SignupCtrl'
         }
@@ -145,7 +151,7 @@ angular.module('angularPassportApp', [
     $rootScope.$watch('currentUser', function(currentUser) {
       // if no currentUser and on a page that requires authorization then try to update it
       // will trigger 401s if user does not have a valid session
-      if (!currentUser && (['/', 'auth/signin', 'auth/signup'].indexOf($location.path()) == -1 )) {
+      if (!currentUser && (['/', 'auth/signin', 'auth/signout', 'auth/signup'].indexOf($location.path()) == -1 )) {
         Auth.currentUser();
       }
     });
