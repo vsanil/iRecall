@@ -1,60 +1,23 @@
-2014-09-07 02:39:19.875 iRecall[76762:70b] Apache Cordova native platform version 3.6.0 is starting.
-2014-09-07 02:39:19.879 iRecall[76762:70b] Multi-tasking -> Device: YES, App: YES
-2014-09-07 02:39:19.887 iRecall[76762:70b] Unlimited access to network resources
-2014-09-07 02:39:19.911 iRecall[76762:70b] CDVPlugin class IonicKeyboard (pluginName: keyboard) does not exist.
-2014-09-07 02:39:19.912 iRecall[76762:70b] [CDVTimer][keyboard] 1.046002ms
-2014-09-07 02:39:19.913 iRecall[76762:70b] [CDVTimer][TotalPluginStartup] 2.475977ms
-2014-09-07 02:39:19.967 iRecall[76762:70b] Resetting plugins due to page load.
-2014-09-07 02:39:21.494 iRecall[76762:70b] Finished load of: file:///Users/vasanthsanil/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/9D7FD454-50C7-4A27-AFB8-8C628E1AAB42/iRecall.app/www/index.html#/auth/signin
-2014-09-07 02:39:22.704 iRecall[76762:70b] CDVPlugin class CDVDevice (pluginName: Device) does not exist.
-2014-09-07 02:39:22.705 iRecall[76762:70b] ERROR: Plugin 'Device' not found, or is not a CDVPlugin. Check your plugin mapping in config.xml.
-2014-09-07 02:39:22.705 iRecall[76762:70b] -[CDVCommandQueue executePending] [Line 158] FAILED pluginJSON = [
-  "Device1051494294",
-  "Device",
-  "getDeviceInfo",
-  [
-
-  ]
-]
-2014-09-07 02:40:52.880 iRecall[76762:70b] CDVPlugin class CDVCamera (pluginName: Camera) does not exist.
-2014-09-07 02:40:52.906 iRecall[76762:70b] ERROR: Plugin 'Camera' not found, or is not a CDVPlugin. Check your plugin mapping in config.xml.
-2014-09-07 02:40:52.907 iRecall[76762:70b] -[CDVCommandQueue executePending] [Line 158] FAILED pluginJSON = [
-  "Camera1051494295",
-  "Camera",
-  "takePicture",
-  [
-    50,
-    1,
-    1,
-    -1,
-    -1,
-    0,
-    0,
-    false,
-    false,
-    false,
-    null,
-    0
-  ]
-]
-2014-09-07 02:42:06.289 iRecall[76762:70b] CDVPlugin class CDVCamera (pluginName: Camera) does not exist.
-2014-09-07 02:42:06.289 iRecall[76762:70b] ERROR: Plugin 'Camera' not found, or is not a CDVPlugin. Check your plugin mapping in config.xml.
-2014-09-07 02:42:06.290 iRecall[76762:70b] -[CDVCommandQueue executePending] [Line 158] FAILED pluginJSON = [
-  "Camera1051494296",
-  "Camera",
-  "takePicture",
-  [
-    50,
-    1,
-    1,
-    -1,
-    -1,
-    0,
-    0,
-    false,
-    false,
-    false,
-    null,
-    0
-  ]
-]
+2014-09-08 01:07:53.674 iRecall[92283:70b] Apache Cordova native platform version 3.6.0 is starting.
+2014-09-08 01:07:53.676 iRecall[92283:70b] Multi-tasking -> Device: YES, App: YES
+2014-09-08 01:07:53.701 iRecall[92283:70b] Unlimited access to network resources
+2014-09-08 01:07:53.723 iRecall[92283:70b] [CDVTimer][keyboard] 0.123978ms
+2014-09-08 01:07:53.724 iRecall[92283:70b] [CDVTimer][TotalPluginStartup] 1.003027ms
+2014-09-08 01:07:54.216 iRecall[92283:70b] Resetting plugins due to page load.
+2014-09-08 01:07:57.661 iRecall[92283:70b] Finished load of: file:///Users/vasanthsanil/Library/Application%20Support/iPhone%20Simulator/7.1/Applications/9D7FD454-50C7-4A27-AFB8-8C628E1AAB42/iRecall.app/www/index.html#/auth/signin
+2014-09-08 01:07:59.266 iRecall[92283:70b] THREAD WARNING: ['Device'] took '38.129150' ms. Plugin should use a background thread.
+2014-09-08 01:09:59.586 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:09:59.599 iRecall[92283:70b] THREAD WARNING: ['Camera'] took '111.595703' ms. Plugin should use a background thread.
+2014-09-08 01:12:41.727 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:12:45.406 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:12:48.291 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:21.411 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:23.070 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:25.269 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:25.592 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:25.760 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:25.934 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:26.135 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:26.350 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:26.560 iRecall[92283:70b] Camera.getPicture: source type 1 not available.
+2014-09-08 01:13:26.734 iRecall[92283:70b] Camera.getPicture: source type 1 not available.

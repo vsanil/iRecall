@@ -55,7 +55,7 @@ var displayError = function(error) {
     console.error(errorString);
 }
 
-gulp.task('sass', function(done) {
+gulp.task('sass', function() {
   gulp.src(paths.sass)
     .pipe(sass({ style: 'expanded' }))
     .pipe(gulp.dest(paths.build))
