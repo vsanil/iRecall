@@ -9,6 +9,7 @@ var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
 var notify = require('gulp-notify');
+var useref = require('gulp-useref');
 
 var paths = {
   build   : './build/',
@@ -62,6 +63,7 @@ gulp.task('sass', function() {
     .pipe(minifyCss({
       keepSpecialComments: 0
     }))
+    .pipe(useref())
     .pipe(gulp.dest('./www/css/'))
     .pipe(gulp.dest(paths.build))
     .on("error", notify.onError(function (error) {
