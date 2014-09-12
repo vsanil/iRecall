@@ -12,40 +12,27 @@
       </label> -->
 
       <label class="item item-input">
-        <span class="input-label">Task</span>
-        <input type="text"
-                                 class="form-control"
-                                 name="task"
-                                 ng-model="user.email"
-                                 required
-                                 autofocus
-                                 mongoose-error>
+        <span class="input-label">Thing</span>
+        <input type="text" class="form-control" name="thing" ng-model="app.thing" required autofocus mongoose-error>
       </label>
-      <!-- <p class="help-block"
-         ng-show="form.email.$error.mongoose">
-          {{ errors.email }}
-      </p> -->
-    </div>
-
-    <div class="form-group" >
-        <label class="item item-input">
-          <span class="input-label">Description</span>
-          <input type="text"
-                                   class="form-control"
-                                   name="desc"
-                                   ng-model="user.password"
-                                   
-                                   mongoose-error>
-        </label>
-                            
-        <!-- <p class="help-block"
-           ng-show="form.password.$error.mongoose">
-            {{ errors.password }}
-        </p> -->
-    </div>
-
-    <div class="form-group has-error">
-        <p class="help-block">{{ error.other }}</p>
+      <label class="item item-input">
+        <span class="input-label">Category/Event</span>
+        <input type="text" class="form-control" name="category" ng-model="app.category" autofocus mongoose-error>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Kept@</span>
+        <input type="text" class="form-control" name="destination" ng-model="app.destination" autofocus mongoose-error>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Description</span>
+        <input type="text" class="form-control" name="description" ng-model="app.description" autofocus mongoose-error>
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Remind me</span>
+        <input type="text" class="form-control" name="reminddue" ng-model="app.reminddue" autofocus mongoose-error> - 
+        <input type="text" class="form-control" name="remindbefore" ng-model="app.remindbefore" autofocus mongoose-error>
+        <span class="input-label">Hours</span>
+      </label>
     </div>
 
     <label class="item item-input">
