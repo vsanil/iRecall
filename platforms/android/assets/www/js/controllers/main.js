@@ -17,4 +17,8 @@ angular.module('angularPassportApp')
     });
   };
 
+$scope.insertThing = function() {
+
+};
+
 })
