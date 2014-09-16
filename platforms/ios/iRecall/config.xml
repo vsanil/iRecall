@@ -22,17 +22,11 @@
     <feature name="Keyboard">
         <param name="ios-package" onload="true" value="IonicKeyboard" />
     </feature>
-    <feature name="Camera">
-        <param name="ios-package" value="CDVCamera" />
-    </feature>
     <feature name="Console">
         <param name="ios-package" value="CDVLogger" />
     </feature>
     <feature name="Device">
         <param name="ios-package" value="CDVDevice" />
-    </feature>
-    <feature name="InAppBrowser">
-        <param name="ios-package" value="CDVInAppBrowser" />
     </feature>
     <name>iRecall</name>
     <description>
@@ -49,4 +43,17 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="CameraUsesGeolocation" value="false" />
+    <feature name="StatusBar">
+        <param name="ios-package" onload="true" value="CDVStatusBar" />
+    </feature>
+    <feature name="InAppBrowser">
+        <param name="ios-package" value="CDVInAppBrowser" />
+        <param name="android-package" value="org.apache.cordova.InAppBrowser" />
+    </feature>
+    <feature name="http://api.phonegap.com/1.0/geolocation" />
+    <feature name="Camera">
+        <param name="ios-package" value="CDVCamera" />
+    </feature>
+    <feature name="http://api.phonegap.com/1.0/file" />
+    <feature name="http://api.phonegap.com/1.0/camera" />
 </widget>
