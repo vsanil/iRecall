@@ -32,7 +32,7 @@
     <description>
         An Ionic Framework and Cordova project.
     </description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">
+    <author email="hi@ionicframework.com" href="http://ionicframework.com/">
       Ionic Framework Team
     </author>
     <content src="index.html" />

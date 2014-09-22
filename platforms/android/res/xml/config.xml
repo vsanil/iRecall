@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.ionicframework.frontendawesome439546" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <preference name="loglevel" value="DEBUG" />
+    <preference name="AndroidLaunchMode" value="singleTop" />
+    <feature name="App">
+        <param name="android-package" value="org.apache.cordova.App" />
+    </feature>
     <feature name="Keyboard">
         <param name="android-package" value="com.ionic.keyboard.IonicKeyboard" />
         <param name="onload" value="true" />
@@ -12,7 +16,7 @@
     <description>
         An Ionic Framework and Cordova project.
     </description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">
+    <author email="hi@ionicframework.com" href="http://ionicframework.com/">
       Ionic Framework Team
     </author>
     <content src="index.html" />

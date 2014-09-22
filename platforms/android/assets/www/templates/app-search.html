@@ -1,0 +1,51 @@
+<ion-header-bar class="bar-positive">
+  <h1 class="title">Search</h1>
+</ion-header-bar>
+
+<ion-content class="has-header padding">
+<form class="form-signin" name="form-new" ng-submit="" novalidate>
+  <div class="list">
+    <div class="form-group">
+      <label class="item item-input">
+        <span class="input-label">Task</span>
+        <input type="text"
+                                 class="form-control"
+                                 name="task"
+                                 ng-model="user.email"
+                                 required
+                                 autofocus
+                                 mongoose-error>
+      </label>
+      <!-- <p class="help-block"
+         ng-show="form.email.$error.mongoose">
+          {{ errors.email }}
+      </p> -->
+    </div>
+
+    <div class="form-group" >
+        <label class="item item-input">
+          <span class="input-label">Description</span>
+          <input type="text"
+                                   class="form-control"
+                                   name="desc"
+                                   ng-model="user.password"
+                                   
+                                   mongoose-error>
+        </label>
+                            
+        <!-- <p class="help-block"
+           ng-show="form.password.$error.mongoose">
+            {{ errors.password }}
+        </p> -->
+    </div>
+
+    <div class="form-group has-error">
+        <p class="help-block">{{ error.other }}</p>
+    </div>
+
+    <label class="item item-input">
+      <button class="button button-block button-positive" type="submit">Save</button>
+    </label>
+  </div>
+  </form>
+</ion-content>
