@@ -1,4 +1,4 @@
-/Users/vasanthsanil/Documents/workspace/iRecall/platforms/android/ant-gen/com/ionicframework/frontendawesome439546/R.java \
+/Users/vasanthsanil/Documents/workspace/iRecall/platforms/android/ant-gen/com/ionicframework/irecall/R.java \
  : /Users/vasanthsanil/Documents/workspace/iRecall/platforms/android/res/drawable/icon.png \
 /Users/vasanthsanil/Documents/workspace/iRecall/platforms/android/res/drawable-hdpi/icon.png \
 /Users/vasanthsanil/Documents/workspace/iRecall/platforms/android/res/drawable-land-hdpi/screen.png \
