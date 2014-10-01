@@ -1,8 +1,13 @@
 'use strict';
 
 angular.module('angularPassportApp')
+<<<<<<< HEAD
 .controller('MainCtrl', function($scope, $cordovaCamera, $location, Camera) {
   $scope.image1 = 'http://placekitten.com/g/200/300';
+=======
+.controller('MainCtrl', function($scope, $cordovaCamera, $location) {
+  $scope.image1 = '' ;
+>>>>>>> 5c25fc5d69030d3afaa9ce44f5940135d6a38f32
 
   $scope.takePicture = function() {
     if (typeof (window.cordova) == 'undefined') {
@@ -24,6 +29,10 @@ angular.module('angularPassportApp')
       };
       $cordovaCamera.getPicture(options).then(function(imageURI) {
         $scope.photo = imageURI;
+<<<<<<< HEAD
+=======
+        $location.path('app/new');
+>>>>>>> 5c25fc5d69030d3afaa9ce44f5940135d6a38f32
       }, function(err) {
         console.error('Unable to take pic', err);
         alert('Unable to take picture');

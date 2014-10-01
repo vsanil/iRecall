@@ -3,14 +3,14 @@
 </ion-header-bar>
 
 <ion-content class="has-header padding">
-<body ng-app="angularPassportApp" ng-controller="MainCtrl">
-<form class="form-new" name="form-new" ng-submit="insertThing(form)"   novalidate>
+
+<form class="form-new" name="form-new"    novalidate>
   <div class="list">
     <div class="form-group">
       <label class="item item-input">
         <span class="input-label">Photo {{image1}}</span>
           
-          <img class="small-image pull-left thumbnail" ng-src="{{image1}}"/>
+          <img class="small-image pull-left thumbnail" data-ng-src="{{image1}}"/>
         
       </label>
 
@@ -43,5 +43,5 @@
     </label>
   </div>
   </form>
-</body>
+
 </ion-content>

@@ -12,7 +12,11 @@ angular.module('angularPassportApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+<<<<<<< HEAD
   'ngCordova',
+=======
+  //'ngCordova',
+>>>>>>> 5c25fc5d69030d3afaa9ce44f5940135d6a38f32
   'ui.bootstrap' /*, 'auth0'*/])
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider /*authProvider, $routeProvider, $locationProvider*/) {
@@ -81,8 +85,13 @@ angular.module('angularPassportApp', [
       url: '/app',
       abstract: true,
       templateUrl: 'templates/app-tab.html'
+<<<<<<< HEAD
       ,
       controller: 'NavbarCtrl'
+=======
+      //,
+      //controller: 'NavbarCtrl'
+>>>>>>> 5c25fc5d69030d3afaa9ce44f5940135d6a38f32
     })
     // .state('app', {
     //             url: "/app",
@@ -105,8 +114,13 @@ angular.module('angularPassportApp', [
       views: {
         'app-new' :{
           templateUrl: "templates/app-new.html"
+<<<<<<< HEAD
            // ,
            // controller: 'MainCtrl'
+=======
+            //,
+            //controller: 'MainCtrl'
+>>>>>>> 5c25fc5d69030d3afaa9ce44f5940135d6a38f32
         }
       }
     });
@@ -134,13 +148,21 @@ angular.module('angularPassportApp', [
   //$locationProvider.html5Mode(true);
 })
 
-.run(function($ionicPlatform, $rootScope, $location, Auth/*, auth*/) {
+.run(function($ionicPlatform, $rootScope, $location, $window, Auth/*, auth*/) {
   //AUTH0
   //auth.hookEvents();
-
+  
+  alert('inside run...' + $ionicPlatform);
   $ionicPlatform.ready(function() {
     //camera
+<<<<<<< HEAD
      if(window.cordova && window.cordova.plugins.Camera) {
+=======
+     alert('inside ready...');
+     alert('>>> ' + window.cordova.plugins.Camera);
+     if(window.cordova && window.cordova.plugins.Camera) {
+      alert('camera found');
+>>>>>>> 5c25fc5d69030d3afaa9ce44f5940135d6a38f32
       pictureSource=navigator.camera.PictureSourceType;
       destinationType=navigator.camera.DestinationType;
     }
@@ -148,13 +170,17 @@ angular.module('angularPassportApp', [
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
+      alert('keyboard found');
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
     if(window.StatusBar) {
+      alert('statusbar found');
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-  })
+  });
+
+    alert('before watch...' + currentUser);
 
     //watching the value of the currentUser variable.
     $rootScope.$watch('currentUser', function(currentUser) {
@@ -165,12 +191,64 @@ angular.module('angularPassportApp', [
       }
     });
 
+alert('before on...');
     // On catching 401 errors, redirect to the login page.
     $rootScope.$on('event:auth-loginRequired', function() {
       $location.path('auth/signin');
       return false;
     });
 
+    // $location.path('auth/signin');
+    // $rootScope.$apply();
+
 });
+
+// .run(function($ionicPlatform, $rootScope, $location, Auth/*, auth*/) {
+//   //AUTH0
+//   //auth.hookEvents();
+  
+//   alert('inside run...' + $ionicPlatform);
+//   $ionicPlatform.ready(function() {
+//     //camera
+//      alert('inside ready...');
+//      alert('>>> ' + window.cordova);
+//      if(window.cordova && window.cordova.plugins.Camera) {
+//       alert('camera found');
+//       pictureSource=navigator.camera.PictureSourceType;
+//       destinationType=navigator.camera.DestinationType;
+//     }
+
+//     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+//     // for form inputs)
+//     if(window.cordova && window.cordova.plugins.Keyboard) {
+//       alert('keyboard found');
+//       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+//     }
+//     if(window.StatusBar) {
+//       alert('statusbar found');
+//       // org.apache.cordova.statusbar required
+//       StatusBar.styleDefault();
+//     }
+//   });
+
+//     alert('before watch...' + currentUser);
+
+//     //watching the value of the currentUser variable.
+//     $rootScope.$watch('currentUser', function(currentUser) {
+//       // if no currentUser and on a page that requires authorization then try to update it
+//       // will trigger 401s if user does not have a valid session
+//       if (!currentUser && (['/', 'auth/signin', 'auth/signout', 'auth/signup'].indexOf($location.path()) == -1 )) {
+//         Auth.currentUser();
+//       }
+//     });
+
+// alert('before on...');
+//     // On catching 401 errors, redirect to the login page.
+//     $rootScope.$on('event:auth-loginRequired', function() {
+//       $location.path('auth/signin');
+//       return false;
+//     });
+
+// });
 
 
