@@ -12,6 +12,7 @@ angular.module('angularPassportApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+  'ngCordova',
   'ui.bootstrap' /*, 'auth0'*/])
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider /*authProvider, $routeProvider, $locationProvider*/) {
@@ -79,7 +80,8 @@ angular.module('angularPassportApp', [
   .state('app', {
       url: '/app',
       abstract: true,
-      templateUrl: 'templates/app-tab.html',
+      templateUrl: 'templates/app-tab.html'
+      ,
       controller: 'NavbarCtrl'
     })
     // .state('app', {
@@ -103,8 +105,8 @@ angular.module('angularPassportApp', [
       views: {
         'app-new' :{
           templateUrl: "templates/app-new.html"
-          // ,
-          // controller: 'SignupCtrl'
+           // ,
+           // controller: 'MainCtrl'
         }
       }
     });
@@ -137,6 +139,12 @@ angular.module('angularPassportApp', [
   //auth.hookEvents();
 
   $ionicPlatform.ready(function() {
+    //camera
+     if(window.cordova && window.cordova.plugins.Camera) {
+      pictureSource=navigator.camera.PictureSourceType;
+      destinationType=navigator.camera.DestinationType;
+    }
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
