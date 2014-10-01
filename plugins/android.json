@@ -128,6 +128,9 @@
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.ionicframework.irecall"
         },
+        "org.apache.cordova.file": {
+            "PACKAGE_NAME": "com.ionicframework.irecall"
+        },
         "org.apache.cordova.geolocation": {
             "PACKAGE_NAME": "com.ionicframework.irecall"
         },
@@ -141,9 +144,5 @@
             "PACKAGE_NAME": "com.ionicframework.irecall"
         }
     },
-    "dependent_plugins": {
-        "org.apache.cordova.file": {
-            "PACKAGE_NAME": "com.ionicframework.irecall"
-        }
-    }
+    "dependent_plugins": {}
 }

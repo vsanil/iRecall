@@ -12,7 +12,7 @@ angular.module('angularPassportApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ngCordova',
+  //'ngCordova',
   'ui.bootstrap' /*, 'auth0'*/])
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider /*authProvider, $routeProvider, $locationProvider*/) {
@@ -134,7 +134,7 @@ angular.module('angularPassportApp', [
   //$locationProvider.html5Mode(true);
 })
 
-.run(function($ionicPlatform, $rootScope, $location, Auth/*, auth*/) {
+.run(function($ionicPlatform, $rootScope, $location, $window, Auth/*, auth*/) {
   //AUTH0
   //auth.hookEvents();
   
@@ -142,7 +142,7 @@ angular.module('angularPassportApp', [
   $ionicPlatform.ready(function() {
     //camera
      alert('inside ready...');
-     alert('>>> ' + window.cordova);
+     alert('>>> ' + window.cordova.plugins.Camera);
      if(window.cordova && window.cordova.plugins.Camera) {
       alert('camera found');
       pictureSource=navigator.camera.PictureSourceType;
@@ -179,6 +179,9 @@ alert('before on...');
       $location.path('auth/signin');
       return false;
     });
+
+    // $location.path('auth/signin');
+    // $rootScope.$apply();
 
 });
 

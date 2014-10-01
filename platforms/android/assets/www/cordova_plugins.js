@@ -50,70 +50,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/org.apache.cordova.media-capture/www/CaptureAudioOptions.js",
-        "id": "org.apache.cordova.media-capture.CaptureAudioOptions",
-        "clobbers": [
-            "CaptureAudioOptions"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.media-capture/www/CaptureImageOptions.js",
-        "id": "org.apache.cordova.media-capture.CaptureImageOptions",
-        "clobbers": [
-            "CaptureImageOptions"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.media-capture/www/CaptureVideoOptions.js",
-        "id": "org.apache.cordova.media-capture.CaptureVideoOptions",
-        "clobbers": [
-            "CaptureVideoOptions"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.media-capture/www/CaptureError.js",
-        "id": "org.apache.cordova.media-capture.CaptureError",
-        "clobbers": [
-            "CaptureError"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.media-capture/www/MediaFileData.js",
-        "id": "org.apache.cordova.media-capture.MediaFileData",
-        "clobbers": [
-            "MediaFileData"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.media-capture/www/MediaFile.js",
-        "id": "org.apache.cordova.media-capture.MediaFile",
-        "clobbers": [
-            "MediaFile"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.media-capture/www/capture.js",
-        "id": "org.apache.cordova.media-capture.capture",
-        "clobbers": [
-            "navigator.device.capture"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.statusbar/www/statusbar.js",
-        "id": "org.apache.cordova.statusbar.statusbar",
-        "clobbers": [
-            "window.StatusBar"
-        ]
-    },
-    {
-        "file": "plugins/org.apache.cordova.vibration/www/vibration.js",
-        "id": "org.apache.cordova.vibration.notification",
-        "merges": [
-            "navigator.notification",
-            "navigator"
-        ]
-    },
-    {
         "file": "plugins/org.apache.cordova.file/www/DirectoryEntry.js",
         "id": "org.apache.cordova.file.DirectoryEntry",
         "clobbers": [
@@ -258,6 +194,70 @@ module.exports = [
             "cordova"
         ],
         "runs": true
+    },
+    {
+        "file": "plugins/org.apache.cordova.media-capture/www/CaptureAudioOptions.js",
+        "id": "org.apache.cordova.media-capture.CaptureAudioOptions",
+        "clobbers": [
+            "CaptureAudioOptions"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.media-capture/www/CaptureImageOptions.js",
+        "id": "org.apache.cordova.media-capture.CaptureImageOptions",
+        "clobbers": [
+            "CaptureImageOptions"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.media-capture/www/CaptureVideoOptions.js",
+        "id": "org.apache.cordova.media-capture.CaptureVideoOptions",
+        "clobbers": [
+            "CaptureVideoOptions"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.media-capture/www/CaptureError.js",
+        "id": "org.apache.cordova.media-capture.CaptureError",
+        "clobbers": [
+            "CaptureError"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.media-capture/www/MediaFileData.js",
+        "id": "org.apache.cordova.media-capture.MediaFileData",
+        "clobbers": [
+            "MediaFileData"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.media-capture/www/MediaFile.js",
+        "id": "org.apache.cordova.media-capture.MediaFile",
+        "clobbers": [
+            "MediaFile"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.media-capture/www/capture.js",
+        "id": "org.apache.cordova.media-capture.capture",
+        "clobbers": [
+            "navigator.device.capture"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.statusbar/www/statusbar.js",
+        "id": "org.apache.cordova.statusbar.statusbar",
+        "clobbers": [
+            "window.StatusBar"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.vibration/www/vibration.js",
+        "id": "org.apache.cordova.vibration.notification",
+        "merges": [
+            "navigator.notification",
+            "navigator"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -267,11 +267,11 @@ module.exports.metadata =
     "com.phonegap.plugins.PushPlugin": "2.3.1",
     "org.apache.cordova.camera": "0.3.2",
     "org.apache.cordova.device": "0.2.12",
+    "org.apache.cordova.file": "1.3.1",
     "org.apache.cordova.geolocation": "0.3.10",
     "org.apache.cordova.media-capture": "0.3.3",
     "org.apache.cordova.statusbar": "0.1.8",
-    "org.apache.cordova.vibration": "0.3.11",
-    "org.apache.cordova.file": "1.3.1"
+    "org.apache.cordova.vibration": "0.3.11"
 }
 // BOTTOM OF METADATA
 });
