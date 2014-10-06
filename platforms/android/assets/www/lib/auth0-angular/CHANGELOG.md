@@ -1,5 +1,17 @@
 # 2.2.X
 
+## 2.2.8
+* Fixed bug when using auth0js library
+
+## 2.2.7
+* Added `authenticated` event for after refresh
+
+## 2.2.6
+* BugFix with `sso: true`
+
+## 2.2.5
+* Added `tokenPayload` to `auth`
+
 ## 2.2.3
 * Fixed bug with email not recognized as possible parameter to do /ro
 

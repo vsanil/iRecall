@@ -4,6 +4,11 @@
     'auth0.service',
     'auth0.interceptor',
     'auth0.utils'
+  ]).run([
+    'auth',
+    function (auth) {
+      auth.hookEvents();
+    }
   ]);
   angular.module('auth0.utils', []).provider('authUtils', function () {
     var Utils = {
@@ -66,6 +71,9 @@
             };
           }
         };
+        authUtils.isWidget = function (lib) {
+          return lib && lib.getClient;
+        };
         authUtils.promisify = function (nodeback, self) {
           if (angular.isFunction(nodeback)) {
             return function (args) {
@@ -108,35 +116,50 @@
       }
     ];
   });
-  angular.module('auth0.interceptor', []).factory('authInterceptor', [
-    '$rootScope',
-    '$q',
-    '$injector',
-    function ($rootScope, $q, $injector) {
-      return {
-        request: function (config) {
-          // When using auth dependency is never loading, we need to do this manually
-          // This issue should be related with: https://github.com/angular/angular.js/issues/2367
-          if (!$injector.has('auth')) {
+  angular.module('auth0.interceptor', []).provider('authInterceptor', function () {
+    var skipJWT = 'skipAuthorization';
+    var authHeader = 'Authorization';
+    var authPrefix = 'Bearer ';
+    this.setSkipJWT = function (name) {
+      skipJWT = name || skipJWT;
+    };
+    this.setAuthHeader = function (name) {
+      authHeader = name || authHeader;
+    };
+    this.setAuthPrefix = function (name) {
+      authPrefix = name || authPrefix;
+    };
+    this.$get = [
+      '$rootScope',
+      '$q',
+      '$injector',
+      function ($rootScope, $q, $injector) {
+        var auth;
+        return {
+          request: function (config) {
+            // When using auth dependency is never loading, we need to do this manually
+            // This issue should be related with: https://github.com/angular/angular.js/issues/2367
+            if (config[skipJWT] || !$injector.has('auth')) {
+              return config;
+            }
+            auth = auth || $injector.get('auth');
+            config.headers = config.headers || {};
+            if (auth.idToken && !config.headers[authHeader]) {
+              config.headers[authHeader] = authPrefix + auth.idToken;
+            }
             return config;
+          },
+          responseError: function (response) {
+            // handle the case where the user is not authenticated
+            if (response.status === 401) {
+              $rootScope.$broadcast('auth0.forbiddenRequest', response);
+            }
+            return $q.reject(response);
           }
-          var auth = $injector.get('auth');
-          config.headers = config.headers || {};
-          if (auth.idToken && !config.headers.Authorization) {
-            config.headers.Authorization = 'Bearer ' + auth.idToken;
-          }
-          return config;
-        },
-        responseError: function (response) {
-          // handle the case where the user is not authenticated
-          if (response.status === 401) {
-            $rootScope.$broadcast('auth0.forbidden', response);
-          }
-          return $q.reject(response);
-        }
-      };
-    }
-  ]);
+        };
+      }
+    ];
+  });
   angular.module('auth0.storage', []).service('authStorage', [
     '$injector',
     function ($injector) {
@@ -209,7 +232,7 @@
         }
         this.loginUrl = options.loginUrl;
         this.loginState = options.loginState;
-        this.clientID = options.clientID;
+        this.clientID = options.clientID || options.clientId;
         this.sso = options.sso;
         this.minutesToRenewToken = options.minutesToRenewToken || 120;
         var Constructor = Auth0Constructor;
@@ -260,26 +283,26 @@
             return config.eventHandlers[anEvent];
           };
           var callHandler = function (anEvent, locals) {
+            $rootScope.$broadcast('auth0.' + anEvent, locals);
             angular.forEach(getHandlers(anEvent) || [], function (handler) {
               $injector.invoke(handler, auth, locals);
             });
           };
           // SignIn
-          var onSigninOk = function (idToken, accessToken, state, refreshToken, locationEvent) {
+          var onSigninOk = function (idToken, accessToken, state, refreshToken, isRefresh) {
             authStorage.store(idToken, accessToken, state, refreshToken);
             var profilePromise = auth.getProfile(idToken);
+            var tokenPayload = auth.getTokenPayload(idToken);
             var response = {
                 idToken: idToken,
                 accessToken: accessToken,
                 state: state,
                 refreshToken: refreshToken,
-                isAuthenticated: true
+                isAuthenticated: true,
+                tokenPayload: tokenPayload
               };
             angular.extend(auth, response);
-            callHandler('loginSuccess', angular.extend({
-              profile: profilePromise,
-              locationEvent: locationEvent
-            }, response));
+            callHandler(!isRefresh ? 'loginSuccess' : 'authenticated', angular.extend({ profile: profilePromise }, response));
             return profilePromise;
           };
           function forbidden() {
@@ -294,23 +317,23 @@
           }
           // Redirect mode
           var refreshingToken = null;
-          $rootScope.$on('$locationChangeStart', function (e) {
+          $rootScope.$on('$locationChangeStart', function () {
             var hashResult = config.auth0lib.parseHash($window.location.hash);
             if (!auth.isAuthenticated) {
               if (hashResult && hashResult.id_token) {
-                onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, hashResult.refresh_token, e);
+                onSigninOk(hashResult.id_token, hashResult.access_token, hashResult.state, hashResult.refresh_token);
                 return;
               }
               var storedValues = authStorage.get();
               if (storedValues && storedValues.idToken) {
                 if (auth.hasTokenExpired(storedValues.idToken)) {
                   if (storedValues.refreshToken) {
-                    refreshingToken = auth.refreshToken(storedValues.refreshToken);
+                    refreshingToken = auth.refreshIdToken(storedValues.refreshToken);
                     refreshingToken.then(function (idToken) {
-                      onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, e);
+                      onSigninOk(idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, true);
                     }, function () {
                       forbidden();
-                    }).finally(function () {
+                    })['finally'](function () {
                       refreshingToken = null;
                     });
                   } else {
@@ -319,13 +342,14 @@
                   return;
                 } else {
                   var expireDate = auth.getTokenExpirationDate(storedValues.idToken);
-                  if (new Date().valueOf() - expireDate.valueOf() <= auth.config.minutesToRenewToken * 60 * 1000) {
+                  if (expireDate.valueOf() - new Date().valueOf() <= auth.config.minutesToRenewToken * 60 * 1000) {
                     auth.renewIdToken(storedValues.idToken).then(function (token) {
                       auth.idToken = token;
+                      auth.tokenPayload = auth.getTokenPayload(token);
                     });
                   }
                 }
-                onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, e);
+                onSigninOk(storedValues.idToken, storedValues.accessToken, storedValues.state, storedValues.refreshToken, true);
                 return;
               }
               if (config.sso) {
@@ -334,13 +358,13 @@
                     auth.signin({
                       popup: false,
                       connection: ssoData.lastUsedConnection.strategy
-                    }, config.auth0js);
+                    }, null, null, config.auth0js);
                   }
                 }));
               }
             }
           });
-          $rootScope.$on('auth0.forbidden', function () {
+          $rootScope.$on('auth0.forbiddenRequest', function () {
             forbidden();
           });
           if (config.loginUrl) {
@@ -366,28 +390,32 @@
           auth.config = config;
           var checkHandlers = function (options) {
             var successHandlers = getHandlers('loginSuccess');
-            if (!options.popup && (!options.username || !options.email) && (!successHandlers || successHandlers.length === 0)) {
+            if (!options.popup && !options.username && !options.email && (!successHandlers || successHandlers.length === 0)) {
               throw new Error('You must define a loginSuccess handler ' + 'if not using popup mode or not doing ro call because that means you are doing a redirect');
             }
           };
           auth.hookEvents = function () {
           };
-          auth.getTokenExpirationDate = function (token) {
+          auth.getTokenPayload = function (token) {
             var parts = token.split('.');
             if (parts.length !== 3) {
-              return true;
+              throw new Error('Error getting token payload');
             }
             var decoded = authUtils.urlBase64Decode(parts[1]);
             if (!decoded) {
-              return true;
+              throw new Error('Error getting token payload');
             }
+            return JSON.parse(decoded);
+          };
+          auth.getTokenExpirationDate = function (token) {
+            var decoded;
             try {
-              decoded = JSON.parse(decoded);
+              decoded = auth.getTokenPayload(token);
             } catch (e) {
-              return true;
+              return null;
             }
             if (!decoded.exp) {
-              return true;
+              return null;
             }
             var d = new Date(0);
             // The 0 here is the key, which sets the date to the epoch
@@ -421,7 +449,7 @@
               return delegationResult.id_token;
             });
           };
-          auth.refreshToken = function (refresh_token) {
+          auth.refreshIdToken = function (refresh_token) {
             var refreshTokenAsync = authUtils.promisify(config.auth0js.refreshToken, config.auth0js);
             return refreshTokenAsync(refresh_token || auth.refreshToken).then(function (delegationResult) {
               return delegationResult.id_token;
@@ -449,7 +477,7 @@
                   errorCallback(err);
                 }
               }, auth0lib);
-            if (config.isWidget) {
+            if (authUtils.isWidget(auth0lib)) {
               signinCall(options, null);
             } else {
               signinCall(options);
@@ -499,6 +527,7 @@
             auth.idToken = null;
             auth.state = null;
             auth.accessToken = null;
+            auth.tokenPayload = null;
             auth.isAuthenticated = false;
             callHandler('logout');
           };

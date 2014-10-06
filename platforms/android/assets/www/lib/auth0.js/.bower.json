@@ -4,14 +4,14 @@
   "main": "build/auth0.js",
   "dependencies": {},
   "homepage": "https://github.com/auth0/auth0.js",
-  "version": "4.0.1",
-  "_release": "4.0.1",
+  "version": "4.2.8",
+  "_release": "4.2.8",
   "_resolution": {
     "type": "version",
-    "tag": "v4.0.1",
-    "commit": "20d7c098630ec608ecc8998d1e36c250404672a7"
+    "tag": "v4.2.8",
+    "commit": "41a19b8bc45afded74ce0a4d25f4a00dad6214e8"
   },
   "_source": "git://github.com/auth0/auth0.js.git",
-  "_target": "~4.0",
+  "_target": "~4.2",
   "_originalSource": "auth0.js"
 }

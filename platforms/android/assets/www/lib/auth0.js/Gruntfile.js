@@ -81,81 +81,72 @@ module.exports = function(grunt) {
       }
     },
     exec: {
+      'test-integration': {
+        cmd: 'node_modules/.bin/zuul -- test/*.js',
+        stdout: true,
+        stderr: true
+      },
       'test-phantom': {
-        cmd: 'node_modules/testem/testem.js -f testem_dev.yml ci -l PhantomJS',
-        stdout: true,
-        stderr: true
-      },
-      'test-desktop': {
-        cmd: 'node_modules/testem/testem.js ci -l bs_chrome,bs_firefox,bs_ie_8,bs_ie_9,bs_ie_10,bs_ie_11',
-        stdout: true,
-        stderr: true
-      },
-      'test-mobile': {
-        cmd: 'node_modules/testem/testem.js ci -l bs_iphone_5', //disable ,bs_android_41: is not working
+        cmd: 'node_modules/.bin/zuul --phantom 9999 -- test/*.js',
         stdout: true,
         stderr: true
       }
     },
-    s3: {
+    /* Checks for outdated npm dependencies before release. */
+    outdated: {
+      release: {
+        development: false
+      }
+    },
+    aws_s3: {
       options: {
-        key:    process.env.S3_KEY,
-        secret: process.env.S3_SECRET,
-        bucket: process.env.S3_BUCKET,
-        access: 'public-read',
-        headers: {
-          'Cache-Control': 'public, max-age=300',
-        }
+        accessKeyId:     process.env.S3_KEY,
+        secretAccessKey: process.env.S3_SECRET,
+        bucket:          process.env.S3_BUCKET,
+        uploadConcurrency: 5,
+        params: {
+          CacheControl: 'public, max-age=300'
+        },
+        debug: true //<<< use this option to test changes
       },
       clean: {
-        del: [
-          {
-            src:     'w2/auth0-' + pkg.version + '.js',
-          },
-          {
-            src:     'w2/auth0-' + pkg.version + '.min.js',
-          },
-          {
-            src:     'w2/auth0-' + major_version + '.js',
-          },
-          {
-            src:     'w2/auth0-' + major_version + '.min.js',
-          },
-          {
-            src:     'w2/auth0-' + minor_version + '.js',
-          },
-          {
-            src:     'w2/auth0-' + minor_version + '.min.js',
-          }
+        files: [
+          { action: 'delete', dest: 'w2/auth0-' + pkg.version   + '.js'     },
+          { action: 'delete', dest: 'w2/auth0-' + pkg.version   + '.min.js' },
+          { action: 'delete', dest: 'w2/auth0-' + major_version + '.js'     },
+          { action: 'delete', dest: 'w2/auth0-' + major_version + '.min.js' },
+          { action: 'delete', dest: 'w2/auth0-' + minor_version + '.js'     },
+          { action: 'delete', dest: 'w2/auth0-' + minor_version + '.min.js' }
         ]
       },
       publish: {
-        upload: [
+        files: [
           {
-            src:  'release/*',
-            dest: 'w2/',
-            options: { gzip: false }
+            expand: true,
+            cwd:    'release/',
+            src:    ['**'],
+            dest:   'w2/'
           }
         ]
       }
     },
-    maxcdn: {
-      purgeCache: {
+    /* Purge FASTLY cache. */
+    fastly: {
+      options: {
+        key:  process.env.FASTLY_KEY,
+        host: process.env.FASTLY_HOST
+      },
+      purge: {
         options: {
-          companyAlias:   process.env.MAXCDN_COMPANY_ALIAS,
-          consumerKey:    process.env.MAXCDN_CONSUMER_KEY,
-          consumerSecret: process.env.MAXCDN_CONSUMER_SECRET,
-          zone_id:        process.env.MAXCDN_ZONE_ID,
-          method:         'delete'
+          urls: [
+            'w2/auth0-' + pkg.version   + '.min.js',
+            'w2/auth0-' + pkg.version   + '.js',
+            'w2/auth0-' + major_version + '.js',
+            'w2/auth0-' + major_version + '.min.js',
+            'w2/auth0-' + minor_version + '.js',
+            'w2/auth0-' + minor_version + '.min.js'
+          ]
         },
-        files: [
-          { dest:     'w2/auth0-' + pkg.version + '.min.js' },
-          { dest:     'w2/auth0-' + pkg.version + '.js' },
-          { dest:     'w2/auth0-' + major_version + '.js', },
-          { dest:     'w2/auth0-' + major_version + '.min.js', },
-          { dest:     'w2/auth0-' + minor_version + '.js', },
-          { dest:     'w2/auth0-' + minor_version + '.min.js', }
-        ],
       },
     }
   });
@@ -168,8 +159,10 @@ module.exports = function(grunt) {
   grunt.registerTask("build",         ["clean", "browserify:dist", "uglify:min", "copy:example"]);
   grunt.registerTask("example",       ["connect:example", "watch", "build"]);
   grunt.registerTask("example_https", ["connect:example_https", "watch", "build"]);
+
   grunt.registerTask("dev",           ["connect:test", "watch", "build"]);
-  grunt.registerTask("test",          ["exec:test-phantom"]);
-  grunt.registerTask("integration",   ["exec:test-desktop", "exec:test-mobile"]);
-  grunt.registerTask("cdn",           ["build", "copy:release", "s3","maxcdn:purgeCache"]);
+  grunt.registerTask("integration",   ["exec:test-integration"]);
+  grunt.registerTask("phantom",       ["exec:test-phantom"]);
+
+  grunt.registerTask("cdn",           ["build", "copy:release", "aws_s3", "fastly:purge"]);
 };

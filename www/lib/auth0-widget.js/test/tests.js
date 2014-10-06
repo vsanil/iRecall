@@ -1,13 +1,30 @@
+/**
+ * Mocha config
+ */
+
+mocha.timeout(60000);
+mocha.ui('bdd');
+mocha.reporter('html');
+mocha.globals(['jQuery*', '__auth0jp*', 'Auth0*']);
+
+/**
+ * Define some support variables
+ */
+
+var placeholderSupport = ('placeholder' in document.createElement('input'));
+var placeholderSupportPrefix = placeholderSupport ? '' : 'not ';
+
+
+/**
+ * Test Auth0Widget
+ */
+
 describe('auth0-Widget', function () {
 
   var domain =      'abc.auth0.com';
   var clientID =    '123456789';
   var callbackURL = 'http://myapp.com/callback';
   var widget, client;
-
-  var removeWidget = function () {
-    $('#a0-widget').remove();
-  };
 
   beforeEach(function () {
     Auth0Widget.prototype._getApp = function () {
@@ -65,10 +82,10 @@ describe('auth0-Widget', function () {
     };
   });
 
-  afterEach(function () {
-    widget.removeAllListeners('transition_mode');
+  afterEach(function (done) {
     global.window.location.hash = '';
-    removeWidget();
+    widget.removeAllListeners('transition_mode');
+    widget._hideSignIn(done);
   });
 
   it('should initialize client with callbackOnLocationHash', function () {
@@ -439,6 +456,38 @@ describe('auth0-Widget', function () {
         $('#a0-widget .a0-reset .a0-emailPassword .a0-repeatPassword input').val('xyz');
         $('#a0-widget .a0-reset .a0-emailPassword .a0-action button.a0-primary').trigger('click');
       });
+    });
+  });
+
+  describe('placeholder fallback support', function() {
+    it('should have a0-no-placeholder-support class when not supported (' + placeholderSupportPrefix + 'supported)', function(done) {
+      widget
+      .once('signin_ready', function() {
+        var hasClass = $('#a0-widget .a0-overlay').hasClass('a0-no-placeholder-support');
+        expect(hasClass).to.be(!placeholderSupport);
+        if (!placeholderSupport) {
+          var $fallback = $('#a0-widget .a0-no-placeholder-support .a0-sad-placeholder');
+          expect($fallback).to.not.be.empty()
+          expect($fallback.css('display')).to.equal('block');
+        };
+        done();
+      })
+      .show()
+    });
+
+    it('should not have a0-no-placeholder-support class when supported (' + placeholderSupportPrefix + 'supported)', function(done) {
+      widget
+      .once('signin_ready', function() {
+        var hasClass = $('#a0-widget .a0-overlay').hasClass('a0-no-placeholder-support');
+        expect(!hasClass).to.be(placeholderSupport);
+        if (placeholderSupport) {
+          var $fallback = $('#a0-widget .a0-no-placeholder-support .a0-sad-placeholder');
+          expect($fallback).to.be.empty();
+          expect($('#a0-widget .a0-sad-placeholder').css('display')).to.equal('none');
+        };
+        done();
+      })
+      .show();
     });
   });
 

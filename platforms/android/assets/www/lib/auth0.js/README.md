@@ -1,6 +1,12 @@
-[![NPM version](https://badge.fury.io/js/auth0-js.png)](http://badge.fury.io/js/auth0-js)
+![](https://cdn.auth0.com/resources/oss-source-large-2x.png)
 
-[![Auth0](https://i.cloudup.com/1vaSVATKTL.png)](http://auth0.com)
+# Auth0.js
+[![NPM version][npm-image]][npm-url]
+[![Build status][strider-image]][strider-url]
+[![Test coverage][coveralls-image]][coveralls-url]
+[![Dependency Status][david-image]][david-url]
+[![License][license-image]][license-url]
+[![Downloads][downloads-image]][downloads-url]
 
 [Auth0](http://auth0.com) is an authentication broker that supports social identity providers as well as enterprise identity providers such as Active Directory, LDAP, Office365, Google Apps, Salesforce.
 
@@ -8,13 +14,13 @@ Auth0.js is a client-side library for [Auth0](http://auth0.com). It allows you t
 
 ## Example
 
-The example directory has a ready-to-go app. In order to run it you need [node](http://nodejs.org/) installed, then execute `npm run example` from the root of this project.
+The example directory has a ready-to-go app. In order to run it you need [node](http://nodejs.org/) installed, download dependencies with `npm install`, then execute `npm run example` from the root of this project.
 
 ## Usage
 
 Take `auth0.js` or `auth0.min.js` from the `/build` directory and import it to your page.
 
-If you are using [browserify](http://browserify.org/) install with `npm install auth0.js`.
+If you are using [browserify](http://browserify.org/) install with `npm i auth0.js --production --save`.
 
 > Note: The following examples use jQuery, but auth0.js is not tied to jQuery and any library can be used with it.
 
@@ -23,7 +29,7 @@ If you are using [browserify](http://browserify.org/) install with `npm install 
 Construct a new instance of the Auth0 client as follows:
 
 ~~~html
-<script src="http://cdn.auth0.com/w2/auth0-2.3.js"></script>
+<script src="http://cdn.auth0.com/w2/auth0-4.js"></script>
 <script type="text/javascript">
   var auth0 = new Auth0({
     domain:       'mine.auth0.com',
@@ -82,7 +88,7 @@ Trigger the login on any of your active identity provider as follows:
       // store in cookies
     });
   });
-  
+
   //trigger login popup with google
   $('.login-google-popup').click(function (e) {
     e.preventDefault();
@@ -113,7 +119,7 @@ You can also request scopes that are not were not configured for the connection.
       connection_scope: ['https://www.googleapis.com/auth/orkut', 'https://picasaweb.google.com/data/']
     });
   });
-  
+
   // alternatively a comma separated list also works
   $('.login-google').click(function () {
     auth0.login({
@@ -123,6 +129,22 @@ You can also request scopes that are not were not configured for the connection.
   });
 ~~~
 
+Trigger the login with offline mode support to get the `refresh_token`
+
+````js
+$('.login-dbconn').click(function () {
+    auth0.login({
+      connection: 'db-conn',
+      username:   $('.username').val(),
+      password:   $('.password').val(),
+      offline_mode: true
+    },
+    function (err, profile, id_token, access_token, state, refresh_token) {
+      // store in cookies
+      // refresh_token is sent because offline_mode is set to true
+    });
+  });
+````
 
 ### Processing the callback
 
@@ -140,6 +162,9 @@ Once you have succesfully authenticated, Auth0 will redirect to your `callbackUR
       auth0.getProfile(result.id_token, function (err, profile) {
         alert('hello ' + profile.name);
       });
+      // If offline_mode: true was sent on the request
+      // You can grab the result.refresh_token here
+
     } else if (result && result.error) {
       alert('error: ' + result.error);
     }
@@ -165,14 +190,16 @@ If there is no hash, `result` will be null. It the hash contains the jwt, the pr
 
 While using this mode, the result will be passed as the `login` method callback.
 ```js
-  auth0.login({ popup: true }, function(err, profile, id_token, access_token, state) {
+  auth0.login({ popup: true }, function(err, profile, id_token, access_token, state, refresh_token) {
     if (err) {
       // Handle the error!
       return;
     }
-    
+
     //use id_token to call your rest api
     alert('hello ' + profile.name);
+
+    // refresh_token is sent only if offline_mode was set to true
   });
 });
 ```
@@ -291,9 +318,9 @@ Method `getSSOData` fetches Single Sign-On information:
 
 Run `grunt dev` and point your browser to `http://localhost:9999/test_harness.html` to run the test suite.
 
-Run `grunt test` if you have PhantomJS installed.
+Run `grunt phantom` if you have PhantomJS installed.
 
-Do you have issues in some browser? Ask us guidance to test in multiple browsers!
+Run `grunt integration` (or `npm test`) if you have SauceLabs account. You will need a `SAUCE_ACCESS_KEY` and `SAUCE_USERNAME` env variables.
 
 ## Publishing a new version
 
@@ -301,13 +328,8 @@ Use:
 
 ```
 $ ./bin/version patch
-$ git push origin master --tags
-$ npm publish
+$ git push origin master
 ```
-
-## Browser Compatibility
-
-We are using [BrowserStack](http://browserstack.com) and our own CI server to run the test suite on multiple browsers on every push.
 
 ## License
 
@@ -332,3 +354,18 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+<!-- Vaaaaarrrrsss -->
+
+[npm-image]: https://img.shields.io/npm/v/auth0-js.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/auth0-js
+[strider-image]: https://ci.auth0.com/auth0/auth0.js/badge
+[strider-url]: https://ci.auth0.com/auth0/auth0.js
+[coveralls-image]: https://img.shields.io/coveralls/auth0/auth0.js.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/auth0/auth0.js?branch=master
+[david-image]: http://img.shields.io/david/auth0/auth0.js.svg?style=flat-square
+[david-url]: https://david-dm.org/auth0-js
+[license-image]: http://img.shields.io/npm/l/auth0-js.svg?style=flat-square
+[license-url]: #license
+[downloads-image]: http://img.shields.io/npm/dm/auth0-js.svg?style=flat-square
+[downloads-url]: https://npmjs.org/package/auth0-js

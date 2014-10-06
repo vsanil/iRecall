@@ -12,7 +12,7 @@ angular.module('angularPassportApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  //'ngCordova',
+  'ngCordova',
   'ui.bootstrap' /*, 'auth0'*/])
 
 .config(function($stateProvider, $urlRouterProvider, $httpProvider /*authProvider, $routeProvider, $locationProvider*/) {

@@ -1,4 +1,4 @@
-# Getting Started: Widget Redirect
+# Getting Started: Use your own UI
 
 For this tutorial, you need to create a new account in [Auth0](https://www.auth0.com) and setup a new application. We will then implement client side and server side auth.
 
@@ -74,7 +74,7 @@ For this tutorial, you need to create a new account in [Auth0](https://www.auth0
   myApp
     .controller('LoginCtrl', function ($scope, auth) {
       $scope.login = function() {
-        // This will show the widget to choose how to authenticate
+        // This will authenticate the user with your custom UI
         auth.signin({
           username: $scope.username,
           password: $scope.password,

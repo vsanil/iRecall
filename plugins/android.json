@@ -142,6 +142,9 @@
         },
         "org.apache.cordova.vibration": {
             "PACKAGE_NAME": "com.ionicframework.irecall"
+        },
+        "org.apache.cordova.console": {
+            "PACKAGE_NAME": "com.ionicframework.irecall"
         }
     },
     "dependent_plugins": {}

@@ -33,7 +33,36 @@ signup.submit = function (widget, connectionName, email, password) {
         // to avoid wrong resizing calculations
         if (400 === err.status) {
           if ('invalid_password' === err.name) {
-            widget._focusError(password_input, widget._dict.t('invalid'));
+
+            Opentip.prototype['class'] = _.reduce(Opentip.prototype['class'], function (obj, value, key) {
+              obj[key] = 'a0-' + value;
+              return obj;
+            }, {});
+
+            Opentip.defaultStyle = "auth0Light";
+
+            Opentip.styles.auth0Light = {
+              // Make it look like the alert style. If you omit this, it will default to "standard"
+              extends: "glass",
+              // Tells the tooltip to be fixed and be attached to the trigger, which is the default target
+              target: true,
+              stem: true,
+              showOn: "creation"
+            };
+            
+
+            widget._focusError(password_input, '!'); //, err.message);
+            Opentip.lastZIndex = 10000;
+            var tip = new Opentip('span.a0-error-message', err.message, 'Optional title', {
+              showOn: 'click',
+              target: true,
+              style: 'auth0Light',
+              tipJoint: 'left',
+              root: $('.a0-overlay').get(0),
+              fixed: true,
+              hideTrigger: null,
+              className: 'auth0-opentip'
+            });
             widget._showError(widget._dict.t('signup:invalidPassword'));
           } else {
             widget._showError(widget._dict.t('signup:userExistsErrorText'));

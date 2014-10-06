@@ -5,7 +5,7 @@ var myApp = angular.module('myApp', [
 myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authProvider, $locationProvider) {
 
   // For any unmatched url, redirect to /login
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/home');
 
   // Now set up the states
   $stateProvider
@@ -20,15 +20,13 @@ myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authPro
     controller: 'LoginCtrl'
   })
   .state('root', {
-    url: '/',
+    url: '/home',
     templateUrl: 'views/root.html',
     controller: 'RootCtrl',
     data: {
       requiresLogin: true
     }
   });
-
-  $locationProvider.hashPrefix('!');
 
 
   authProvider.init({
@@ -38,5 +36,8 @@ myApp.config(function($stateProvider, $urlRouterProvider, $httpProvider, authPro
     loginState: 'login'
   });
   $httpProvider.interceptors.push('authInterceptor');
+})
+.run(function(auth) {
+  auth.hookEvents();
 });
 

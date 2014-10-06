@@ -1,20 +1,36 @@
-describe('reset', function () {
+/**
+ * Mocha config
+ */
+
+mocha.timeout(60000);
+mocha.ui('bdd');
+mocha.reporter('html');
+mocha.globals(['jQuery*', '__auth0jp*', 'Auth0*']);
+
+/**
+ * Test reset
+ */
+
+describe('reset', function (done) {
   afterEach(function () {
-    $('#a0-widget').remove();
-    this.auth0.removeAllListeners('transition_mode');
-    $('#a0-widget').remove();
     global.window.location.hash = '';
     global.window.Auth0 = null;
+    this.auth0._hideSignIn(done);
   });
 
-  beforeEach(function () {
-    $('#a0-widget').parents('div').remove();
-    this.auth0 = new Auth0Widget({
-      domain:      'mdocs.auth0.com',
-      callbackURL: 'http://localhost:3000/',
-      clientID:    '0HP71GSd6PuoRYJ3DXKdiXCUUdGmBbup',
-      enableReturnUserExperience: false
-    });
+  beforeEach(function (done) {
+    var self = this;
+    if (!this.auth0) return onhidden();
+
+    function onhidden() {
+      self.auth0 = new Auth0Widget({
+        domain:      'mdocs.auth0.com',
+        callbackURL: 'http://localhost:3000/',
+        clientID:    '0HP71GSd6PuoRYJ3DXKdiXCUUdGmBbup',
+        enableReturnUserExperience: false
+      });
+      done();
+    }
   });
 
   it('should show the loading pane', function (done) {
@@ -25,7 +41,7 @@ describe('reset', function () {
       $('#a0-reset_easy_password').val('123');
       $('#a0-reset_easy_repeat_password').val('123');
 
-      auth0.on('loading_ready', function () {
+      auth0.once('loading_ready', function () {
         expect($('#a0-widget h1').html()).to.be(auth0._dict.t('reset:title'));
         done();
       });

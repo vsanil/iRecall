@@ -37,9 +37,9 @@
     <content src="index.html" />
     <access origin="*" />
     <preference name="fullscreen" value="true" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
+    <preference name="webviewbounce" value="true" />
+    <preference name="UIWebViewBounce" value="true" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="BackupWebStorage" value="none" />
-    <preference name="CameraUsesGeolocation" value="false" />
+    <preference name="CameraUsesGeolocation" value="true" />
 </widget>

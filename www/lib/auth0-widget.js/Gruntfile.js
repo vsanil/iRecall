@@ -31,7 +31,7 @@ module.exports = function (grunt) {
           port: 3000
         }
       },
-      example_https: {
+      "example-https": {
         options: {
           base: ['example', 'example/build', 'build'],
           port:  3000,
@@ -143,27 +143,17 @@ module.exports = function (grunt) {
         stderr: true
       },
       'test-inception': {
-        cmd: 'mocha ./test/support/characters-inception.test.js',
+        cmd: 'node_modules/.bin/mocha ./test/support/characters-inception.test.js',
+        stdout: true,
+        stderr: true
+      },
+      'test-integration': {
+        cmd: 'node_modules/.bin/zuul -- test/*.js',
         stdout: true,
         stderr: true
       },
       'test-phantom': {
-        cmd: 'testem -f testem_dev.yml ci -l PhantomJS',
-        stdout: true,
-        stderr: true
-      },
-      'test-ie': {
-        cmd: 'testem ci -l bs_ie_8,bs_ie_9,bs_ie_10', //disable ,bs_ie_8 is not working
-        stdout: true,
-        stderr: true
-      },
-      'test-desktop': {
-        cmd: 'testem ci -l bs_chrome,bs_firefox', //disable ,bs_ie_9,bs_ie_10,bs_ie_8 Browserstack is not working
-        stdout: true,
-        stderr: true
-      },
-      'test-mobile': {
-        cmd: 'testem ci -l bs_iphone_5', //disable ,bs_android_41: is not working
+        cmd: 'node_modules/.bin/zuul --ui mocha-bdd --phantom 9999 -- test/*.js',
         stdout: true,
         stderr: true
       }
@@ -184,33 +174,34 @@ module.exports = function (grunt) {
         tasks: ["less:example"]
       }
     },
-    s3: {
+    aws_s3: {
       options: {
-        key:    process.env.S3_KEY,
-        secret: process.env.S3_SECRET,
-        bucket: process.env.S3_BUCKET,
-        access: 'public-read',
-        headers: {
-          'Cache-Control': 'public, max-age=300',
-          'Content-Type': 'application/javascript; charset=UTF-8'
-        }
+        accessKeyId:     process.env.S3_KEY,
+        secretAccessKey: process.env.S3_SECRET,
+        bucket:          process.env.S3_BUCKET,
+        uploadConcurrency: 5,
+        params: {
+          CacheControl: 'public, max-age=300'
+        },
+        // debug: true <<< use this option to test changes
       },
       clean: {
-        del: [
-          { src:     'w2/auth0-widget-' + pkg.version + '.js', },
-          { src:     'w2/auth0-widget-' + pkg.version + '.min.js', },
-          { src:     'w2/auth0-widget-' + major_version + '.js', },
-          { src:     'w2/auth0-widget-' + major_version + '.min.js', },
-          { src:     'w2/auth0-widget-' + minor_version + '.js', },
-          { src:     'w2/auth0-widget-' + minor_version + '.min.js', }
+        files: [
+          { action: 'delete', dest: 'w2/auth0-widget-' + pkg.version + '.js', },
+          { action: 'delete', dest: 'w2/auth0-widget-' + pkg.version + '.min.js', },
+          { action: 'delete', dest: 'w2/auth0-widget-' + major_version + '.js', },
+          { action: 'delete', dest: 'w2/auth0-widget-' + major_version + '.min.js', },
+          { action: 'delete', dest: 'w2/auth0-widget-' + minor_version + '.js', },
+          { action: 'delete', dest: 'w2/auth0-widget-' + minor_version + '.min.js', }
         ]
       },
       publish: {
-        upload: [
+        files: [
           {
-            src:     'release/*',
-            dest:    'w2/',
-            options: { gzip: false }
+            expand: true,
+            cwd:    'release/',
+            src:    ['**'],
+            dest:   'w2/'
           }
         ]
       }
@@ -222,23 +213,23 @@ module.exports = function (grunt) {
         clean: true
       }
     },
-    maxcdn: {
-      purgeCache: {
+    /* Purge FASTLY cache. */
+    fastly: {
+      options: {
+        key:  process.env.FASTLY_KEY,
+        host: process.env.FASTLY_HOST
+      },
+      purge: {
         options: {
-          companyAlias:   process.env.MAXCDN_COMPANY_ALIAS,
-          consumerKey:    process.env.MAXCDN_CONSUMER_KEY,
-          consumerSecret: process.env.MAXCDN_CONSUMER_SECRET,
-          zone_id:        process.env.MAXCDN_ZONE_ID,
-          method:         'delete'
+          urls: [
+            'w2/auth0-widget-' + pkg.version   + '.js',
+            'w2/auth0-widget-' + pkg.version   + '.min.js',
+            'w2/auth0-widget-' + major_version + '.js',
+            'w2/auth0-widget-' + major_version + '.min.js',
+            'w2/auth0-widget-' + minor_version + '.js',
+            'w2/auth0-widget-' + minor_version + '.min.js'
+          ]
         },
-        files: [
-          { dest:     'w2/auth0-widget-' + pkg.version + '.js', },
-          { dest:     'w2/auth0-widget-' + pkg.version + '.min.js', },
-          { dest:     'w2/auth0-widget-' + major_version + '.js', },
-          { dest:     'w2/auth0-widget-' + major_version + '.min.js', },
-          { dest:     'w2/auth0-widget-' + minor_version + '.js', },
-          { dest:     'w2/auth0-widget-' + minor_version + '.min.js', }
-        ],
       },
     }
   });
@@ -254,12 +245,15 @@ module.exports = function (grunt) {
     if (key !== "grunt" && key.indexOf("grunt") === 0) grunt.loadNpmTasks(key);
   }
 
-  grunt.registerTask("build",         ["clean", "less:dist", "prefix:css", "autoprefixer:main", "cssmin:minify",
-                                       "browserify:debug", "exec:uglify"]);
+  grunt.registerTask("build",         ["clean", "less:dist", "prefix:css", "autoprefixer:main", "cssmin:minify", "browserify:debug", "exec:uglify"]);
+
   grunt.registerTask("example",       ["less:example", "connect:example", "build", "watch"]);
-  grunt.registerTask("example_https", ["less:example", "connect:example_https", "build", "watch"]);
+  grunt.registerTask("example-https", ["less:example", "connect:example-https", "build", "watch"]);
+
   grunt.registerTask("dev",           ["connect:test", "build", "watch"]);
-  grunt.registerTask("test",          ["build", "exec:test-inception", "exec:test-phantom"]);
-  grunt.registerTask("integration",   ["exec:test-inception", "exec:test-desktop", "exec:test-mobile"]);
-  grunt.registerTask("cdn",           ["build", "copy:release", "checkrepo", "s3:clean", "s3:publish", "maxcdn:purgeCache"]);
+  grunt.registerTask("phantom",       ["build", "exec:test-inception", "exec:test-phantom"]);
+  grunt.registerTask("integration",   ["build", "exec:test-inception", "exec:test-integration"]);
+
+  grunt.registerTask("cdn",           ["build", "copy:release", "aws_s3", "fastly:purge"]);
+
 };

@@ -1,3 +1,14 @@
+/**
+ * Config mocha
+ */
+
+mocha.timeout(60000);
+mocha.globals(['jQuery*', '__auth0jp*']);
+
+/**
+ * Test User and Password
+ */
+
 describe('Auth0 - User And Passwords', function () {
   var auth0 = new Auth0({
     domain:      'mdocs.auth0.com',
@@ -21,6 +32,8 @@ describe('Auth0 - User And Passwords', function () {
         });
       });
 
+      // Fails on IE8. Some bug with errors on XMLHttpRequest handling
+      // XXX: Fix it!
       it.skip('should call the callback with err when the connection doesn\'t exists', function (done) {
         auth0.login({
           connection: 'testsw3eeasdsadsa',
@@ -43,6 +56,23 @@ describe('Auth0 - User And Passwords', function () {
           expect(profile.foo).to.eql('bar');
           expect(profile.identities.length).to.eql(1);
           expect(id_token).to.exist;
+          expect(access_token).to.exist;
+          done();
+        });
+      });
+
+      it('should return refresh_token after successfull authentication with offline_mode', function (done) {
+        auth0.login({
+          connection: 'tests',
+          username: 'johnfoo@gmail.com',
+          password: '12345',
+          offline_mode: true
+        }, function (err, profile, id_token, access_token, state, refresh_token) {
+          expect(profile.name).to.eql('John Foo');
+          expect(profile.foo).to.eql('bar');
+          expect(profile.identities.length).to.eql(1);
+          expect(id_token).to.exist;
+          expect(refresh_token).to.exist;
           expect(access_token).to.exist;
           done();
         });
@@ -297,6 +327,7 @@ describe('Auth0 - User And Passwords', function () {
         username:     'johnfoo@gmail.com',
         password:     '12345'
       }, function (err) {
+        if (auth0._use)
         expect(err.message).to.equal('connection parameter is mandatory');
         done();
       });

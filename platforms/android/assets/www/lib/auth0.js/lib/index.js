@@ -93,6 +93,19 @@ Auth0.prototype._getMode = function () {
   };
 };
 
+Auth0.prototype._addOfflineMode = function(options) {
+  if (options.offline_mode) {
+    if (!options.scope) {
+      throw new Error("When adding offline mode, scope should exist in options");
+    }
+
+    options.device = options.device || 'Browser';
+    if (options.scope.indexOf('offline_access') < 0) {
+      options.scope += ' offline_access';
+    }
+  }
+}
+
 /**
  * Get user information from API
  *
@@ -225,7 +238,7 @@ Auth0.prototype.decodeJwt = function (jwt) {
  * return `error` and `error_description`.
  *
  * @method parseHash
- * @param {String} hash URL to be parsed
+ * @param {String} [hash=window.location.hash] URL to be parsed
  * @example
  *      var auth0 = new Auth0({...});
  *
@@ -242,6 +255,7 @@ Auth0.prototype.decodeJwt = function (jwt) {
  */
 
 Auth0.prototype.parseHash = function (hash) {
+  hash = hash || window.location.hash;
   if (hash.match(/error/)) {
     hash = hash.substr(1).replace(/^\//, '');
     var parsed_qs = qs.parse(hash);
@@ -258,6 +272,7 @@ Auth0.prototype.parseHash = function (hash) {
   hash = hash.substr(1).replace(/^\//, '');
   var parsed_qs = qs.parse(hash);
   var id_token = parsed_qs.id_token;
+  var refresh_token = parsed_qs.refresh_token;
   var prof = this.decodeJwt(id_token);
   var invalidJwt = function (error) {
     var err = {
@@ -283,14 +298,18 @@ Auth0.prototype.parseHash = function (hash) {
     profile: prof,
     id_token: id_token,
     access_token: parsed_qs.access_token,
-    state: parsed_qs.state
+    state: parsed_qs.state,
+    refresh_token: refresh_token
   };
 };
 
 /**
  * Signup
  *
- * @param {Object} options
+ * @param {Object} options Signup Options
+ *  @param {String} email New user email
+ *  @param {String} password New user password
+ *
  * @param {Function} callback
  * @api public
  */
@@ -307,6 +326,8 @@ Auth0.prototype.signup = function (options, callback) {
       email: trim(options.username || options.email || ''),
       tenant: this._domain.split('.')[0]
     });
+
+  this._addOfflineMode(query);
 
   function success () {
     if ('auto_login' in options && !options.auto_login) {
@@ -405,8 +426,12 @@ Auth0.prototype.changePassword = function (options, callback) {
 Auth0.prototype._buildAuthorizeQueryString = function (args, blacklist) {
   var query = xtend.apply(null, args);
 
+  // Adds offline mode to the query
+  this._addOfflineMode(query);
+
   // Elements to filter from query string
   blacklist = blacklist || ['popup', 'popupOptions'];
+  blacklist.push('offline_mode');
 
   var i, key;
 
@@ -431,6 +456,7 @@ Auth0.prototype._buildAuthorizeQueryString = function (args, blacklist) {
  */
 
 Auth0.prototype.login = Auth0.prototype.signin = function (options, callback) {
+
   if (typeof options.username !== 'undefined' ||
       typeof options.email !== 'undefined') {
     return this.loginWithUsernamePassword(options, callback);
@@ -513,7 +539,16 @@ Auth0.prototype.loginPhonegap = function (options, callback) {
 
     var popupUrl = 'https://' + this._domain + '/authorize?' + query;
 
-    var ref = window.open(popupUrl, '_blank', 'location=yes');
+    var popupOptions = xtend({location: 'yes'} ,
+      options.popupOptions);
+
+    // This wasn't send before so we don't send it now either
+    delete popupOptions.width;
+    delete popupOptions.height;
+
+
+
+    var ref = window.open(popupUrl, '_blank', stringifyPopupSettings(popupOptions));
     var answered = false;
 
     function errorHandler(event) {
@@ -539,11 +574,10 @@ Auth0.prototype.loginPhonegap = function (options, callback) {
 
       if (result.id_token) {
         self.getProfile(result.id_token, function (err, profile) {
-          callback(err, profile, result.id_token, result.access_token, result.state);
-          return ref.close();
+          callback(err, profile, result.id_token, result.access_token, result.state, result.refresh_token);
         });
         answered = true;
-        return;
+        return ref.close();
       }
 
       // Case where we've found an error
@@ -626,17 +660,17 @@ Auth0.prototype.loginWithPopup = function(options, callback) {
   }, function (err, result) {
     if (err) {
       // Winchan always returns string errors, we wrap them inside Error objects
-      return callback(new Error(err), null, null, null, null);
+      return callback(new Error(err), null, null, null, null, null);
     }
 
     if (result && result.id_token) {
       return self.getProfile(result.id_token, function (err, profile) {
-        callback(err, profile, result.id_token, result.access_token, result.state);
+        callback(err, profile, result.id_token, result.access_token, result.state, result.refresh_token);
       });
     }
 
     // Case where we've found an error
-    return callback(new Error(result ? result.err : 'Something went wrong'), null, null, null, null);
+    return callback(new Error(result ? result.err : 'Something went wrong'), null, null, null, null, null);
   });
 
   popup.focus();
@@ -679,11 +713,13 @@ Auth0.prototype.loginWithResourceOwner = function (options, callback) {
       grant_type:   'password'
     });
 
+  this._addOfflineMode(query);
+
   var endpoint = '/oauth/ro';
 
   function enrichGetProfile(resp, callback) {
     self.getProfile(resp.id_token, function (err, profile) {
-      callback(err, profile, resp.id_token, resp.access_token, resp.state);
+      callback(err, profile, resp.id_token, resp.access_token, resp.state, resp.refresh_token);
     });
   }
 
@@ -763,6 +799,8 @@ Auth0.prototype.loginWithUsernamePassword = function (options, callback) {
       tenant: this._domain.split('.')[0]
     });
 
+  this._addOfflineMode(query);
+
   var endpoint = '/usernamepassword/login';
 
   if (this._useJSONP) {
@@ -809,43 +847,56 @@ Auth0.prototype.loginWithUsernamePassword = function (options, callback) {
   });
 };
 
-/**
- * Get delegation token for certain addon or certain other clientId
- *
- * Examples:
- *
- *     auth0.getDelegationToken({
- *      id_token: the_id_token,
- *      api: 'auth0'
- *     }, function (err, delegationResult) {
- *        if (err) return console.log(err.message);
- *        // Do stuff with delegation result
- *        expect(delegationResult.id_token).to.exist;
- *        expect(delegationResult.token_type).to.eql('Bearer');
- *        expect(delegationResult.expires_in).to.eql(36000);
- *     })
- *
- * @param {String} targetClientId
- * @param {String} id_token
- * @param {Object} options
- * @param {Function} callback
- * @api public
- */
-
  Auth0.prototype.renewIdToken = function (id_token, callback) {
   this.getDelegationToken({
     id_token: id_token,
+    scope: 'passthrough',
     api: 'auth0'
   }, callback);
- }
+ };
 
  Auth0.prototype.refreshToken = function (refresh_token, callback) {
   this.getDelegationToken({
     refresh_token: refresh_token,
     api: 'auth0'
   }, callback);
- }
+ };
 
+/**
+ * Get delegation token for certain addon or certain other clientId
+ *
+ * @example
+ *
+ *     auth0.getDelegationToken({
+ *      id_token:   '<user-id-token>',
+ *      target:     '<app-client-id>'
+ *      api_type: 'auth0'
+ *     }, function (err, delegationResult) {
+ *        if (err) return console.log(err.message);
+ *        // Do stuff with delegation token
+ *        expect(delegationResult.id_token).to.exist;
+ *        expect(delegationResult.token_type).to.eql('Bearer');
+ *        expect(delegationResult.expires_in).to.eql(36000);
+ *     });
+ *
+ * @example
+ *
+ *      // get a delegation token from a Firebase API App
+  *     auth0.getDelegationToken({
+ *      id_token:   '<user-id-token>',
+ *      target:     '<app-client-id>'
+ *      api_type: 'firebase'
+ *     }, function (err, delegationResult) {
+ *      // Use your firebase token here
+ *    });
+ *
+ * @param {Object} [options]
+ *  @param {String} [id_token]
+ *  @param {String} [target]
+ *  @param {String} [api_type]
+ * @param {Function} [callback]
+ * @api public
+ */
 Auth0.prototype.getDelegationToken = function (options, callback) {
   options = options || {};
 
@@ -856,9 +907,13 @@ Auth0.prototype.getDelegationToken = function (options, callback) {
   var query = xtend({
     grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
     client_id:  this._clientID,
-    target: options.targetClientId,
+    target: options.targetClientId || this._clientID,
     api_type: options.api
   }, options);
+
+  delete query.hasOwnProperty;
+  delete query.targetClientId;
+  delete query.api;
 
   var endpoint = '/delegation';
 
