@@ -138,11 +138,11 @@ angular.module('angularPassportApp', [
   //AUTH0
   //auth.hookEvents();
   
-  alert('inside run...' + $ionicPlatform);
+  //alert('inside run...' + $ionicPlatform);
   $ionicPlatform.ready(function() {
     //camera
-     alert('inside ready...');
-     alert('>>> ' + window.cordova.plugins.Camera);
+     //alert('inside ready...');
+     //alert('>>> ' + window.cordova.plugins.Camera);
      if(window.cordova && window.cordova.plugins.Camera) {
       alert('camera found');
       pictureSource=navigator.camera.PictureSourceType;
@@ -162,7 +162,7 @@ angular.module('angularPassportApp', [
     }
   });
 
-    alert('before watch...' + currentUser);
+    //alert('before watch...' + currentUser);
 
     //watching the value of the currentUser variable.
     $rootScope.$watch('currentUser', function(currentUser) {
@@ -173,7 +173,7 @@ angular.module('angularPassportApp', [
       }
     });
 
-alert('before on...');
+//alert('before on...');
     // On catching 401 errors, redirect to the login page.
     $rootScope.$on('event:auth-loginRequired', function() {
       $location.path('auth/signin');
