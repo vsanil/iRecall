@@ -24,6 +24,31 @@ angular.module('angularPassportApp')
           }
       });
     };
+
+    $scope.forgot = function(form) {
+            Auth.forgot('password', {
+          'email': $scope.user.email
+        },
+        function(err) {
+          $scope.errors = {};
+
+          if (!err) {
+            $location.path('/auth/forgot');
+          } else {
+            angular.forEach(err.errors, function(error, field) {
+              form[field].$setValidity('mongoose', false);
+              $scope.errors[field] = error.type;
+            });
+            $scope.error.other = err.message;
+          }
+      });
+
+
+      
+
+
+    };
+
   });
 
 //AUTH0
