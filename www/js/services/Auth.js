@@ -22,6 +22,18 @@ angular.module('angularPassportApp')
         });
       },
 
+      forgot: function(provider, user, callback) {
+        var cb = callback || angular.noop;
+        User.save(userinfo,
+          function(user) {
+            $rootScope.currentUser = user;
+            return cb();
+          },
+          function(err) {
+            return cb(err.data);
+          });
+      },
+
       logout: function(callback) {
         var cb = callback || angular.noop;
         Session.delete(function(res) {

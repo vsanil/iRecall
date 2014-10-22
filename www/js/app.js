@@ -58,6 +58,15 @@ angular.module('angularPassportApp', [
       abstract: true,
       templateUrl: 'templates/auth-tab.html'
     })
+  .state('auth.forgot', {
+      url: "/forgot",
+      views: {
+        'auth-forgot' :{
+          templateUrl: "templates/auth-forgot.html",
+           controller: 'LoginCtrl'
+        }
+      }
+    })
   .state('auth.signin', {
       url: "/signin",
       views: {

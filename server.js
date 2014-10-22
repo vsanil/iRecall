@@ -8,7 +8,7 @@ var express = require('express'),
     fs = require('fs'),
     mongoStore = require('connect-mongo')(express),
     config = require('./lib/config/config');
-
+var session = require('express-session');
 var app = express();
 
 // Connect to database
@@ -49,6 +49,7 @@ app.configure('development', function(){
 
 // cookieParser should be above session
 app.use(express.cookieParser());
+app.use(session({ secret: 'session secret key' }));
 
 // bodyParser should be above methodOverride
 app.use(express.bodyParser());
