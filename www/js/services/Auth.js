@@ -64,6 +64,7 @@ angular.module('angularPassportApp')
       // },
 
       currentUser: function() {
+        //console.log(Session);
         Session.get(function(user) {
           console.log(user);
           $rootScope.currentUser = user;

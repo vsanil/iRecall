@@ -8,7 +8,9 @@ var express = require('express'),
     fs = require('fs'),
     mongoStore = require('connect-mongo')(express),
     config = require('./lib/config/config');
-var session = require('express-session');
+//var session = require('express-session');
+
+//var connect = require('connect');
 var app = express();
 
 // Connect to database
@@ -49,11 +51,19 @@ app.configure('development', function(){
 
 // cookieParser should be above session
 app.use(express.cookieParser());
-app.use(session({ secret: 'session secret key' }));
+// app.use(session({ secret: 'session secret key',
+//                   saveUninitialized: true,
+//                  resave: true }));
 
 // bodyParser should be above methodOverride
-app.use(express.bodyParser());
+//app.use(connect.urlencoded())
+//app.use(connect.json())
+
+app.use(express.json());
+app.use(express.urlencoded());
+//app.use(express.bodyParser());
 app.use(express.methodOverride());
+
 
 // express/mongo session storage
 app.use(express.session({
@@ -73,6 +83,9 @@ app.use(app.router);
 
 //Bootstrap routes
 require('./lib/config/routes')(app);
+
+//var routes = require('./routes/routes');
+//app.use('/', routes);
 
 // Start server
 var port = process.env.PORT || 3002;
