@@ -133,6 +133,7 @@ angular.module('angularPassportApp', [
   //alert('inside run...' + $ionicPlatform);
   $ionicPlatform.ready(function() {
 
+    
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if(window.cordova && window.cordova.plugins.Keyboard) {
@@ -153,8 +154,6 @@ angular.module('angularPassportApp', [
       destinationType=navigator.camera.DestinationType;
     }
   });
-
-    //alert('before watch...' + currentUser);
 
     //watching the value of the currentUser variable.
     $rootScope.$watch('currentUser', function(currentUser) {
