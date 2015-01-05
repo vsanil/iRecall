@@ -31,7 +31,7 @@ angular.module('angularPassportApp', [
 })
 */
 
-.config(function($stateProvider, $urlRouterProvider, $httpProvider /*authProvider, $routeProvider, $locationProvider*/) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider /*authProvider, $routeProvider*/) {
 
   $stateProvider
 // .state('/', {

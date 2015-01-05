@@ -3,7 +3,7 @@
 </ion-header-bar>
 
 <ion-content class="has-header padding">
-<form class="form-signin" name="form-signin" novalidate>
+<form class="form-signin" name="form-signin" ng-submit="login(form)"  novalidate="">
   <div class="list">
     <div class="form-group" ng-class="{'has-error': form.email.$error.mongoose}">
       <label class="item item-input">
@@ -44,7 +44,8 @@
     </div>
 
     <label class="item item-input">
-      <button class="button button-block button-positive" ng-click="login(form)">Sign In</button>
+      <button class="button button-block button-positive" type="submit">Sign In</button>
+      <!-- <button class="button button-block button-positive" ng-click="login(form)">Sign In</button> -->
       <a href="#/auth/forgot" class="btn btn-link">Forgot/Reset PW?</a>
     </label>
   </div>

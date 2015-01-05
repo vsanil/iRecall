@@ -2,13 +2,18 @@
 
 // Module dependencies.
 var express = require('express'),
+    session = require('express-session'),
+    morgan         = require('morgan'),
+    bodyParser     = require('body-parser'),
+    methodOverride = require('method-override'),
+    cookieParser = require('cookie-parser'),
     http = require('http'),
     passport = require('passport'),
     path = require('path'),
     fs = require('fs'),
-    mongoStore = require('connect-mongo')(express),
+    mongoStore = require('connect-mongo')(session),
+    errorHandler = require('errorhandler'),
     config = require('./lib/config/config');
-//var session = require('express-session');
 
 //var connect = require('connect');
 var app = express();
@@ -25,19 +30,13 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 var pass = require('./lib/config/pass');
 
 // App Configuration
-// app.configure('development', function(){
-//   app.use(express.static(path.join(__dirname, '.tmp')));
-//   app.use(express.static(path.join(__dirname, 'www/app')));
-//   app.use(express.errorHandler());
-//   app.set('views', __dirname + '/www/app/views');
-// });
 
-app.configure('development', function(){
-  // app.use(express.static(path.join(__dirname, '.tmp')));
-  app.use(express.static(path.join(__dirname, 'www')));
-  app.use(express.errorHandler());
-  app.set('views', __dirname + '/www');
-});
+// app.configure('development', function(){
+//   // app.use(express.static(path.join(__dirname, '.tmp')));
+//   app.use(express.static(path.join(__dirname, 'www')));
+//   app.use(express.errorHandler());
+//   app.set('views', __dirname + '/www');
+// });
 
 // app.configure('production', function(){
 //   app.use(express.favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -45,33 +44,43 @@ app.configure('development', function(){
 //   app.set('views', __dirname + '/www/app/views');
 // });
 
+var env = process.env.NODE_ENV || 'development';
+if ('development' == env) {
+  // app.use(express.static(path.join(__dirname, '.tmp')));
+  app.use(express.static(path.join(__dirname, 'www')));
+  app.use(errorHandler());
+  app.set('views', __dirname + '/www');
+}
+
  app.engine('html', require('ejs').renderFile);
  app.set('view engine', 'html');
- app.use(express.logger('dev'));
+ //app.use(express.logger('dev'));
+ app.use(morgan('dev'));
 
 // cookieParser should be above session
-app.use(express.cookieParser());
-// app.use(session({ secret: 'session secret key',
-//                   saveUninitialized: true,
-//                  resave: true }));
+//app.use(express.cookieParser());
+app.use(cookieParser());
 
 // bodyParser should be above methodOverride
-//app.use(connect.urlencoded())
-//app.use(connect.json())
+app.use(bodyParser.urlencoded({ extended: false }));    // parse application/x-www-form-urlencoded
+app.use(bodyParser.json());    // parse application/json
+app.use(methodOverride()); 
 
-app.use(express.json());
-app.use(express.urlencoded());
-//app.use(express.bodyParser());
-app.use(express.methodOverride());
-
+// app.use(express.bodyParser());
+// app.use(express.methodOverride());
+// app.use(session({ secret: 'session secret key',
+//                    saveUninitialized: true,
+//                   resave: true }));
 
 // express/mongo session storage
-app.use(express.session({
+app.use(session({
   secret: 'MEAN',
   store: new mongoStore({
     url: config.db,
     collection: 'sessions'
-  })
+  }),
+  resave: true,
+  saveUninitialized: true
 }));
 
 // use passport session
@@ -79,13 +88,26 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //routes should be at the last
-app.use(app.router);
+//app.use(app.router);
 
 //Bootstrap routes
+// require('./lib/config/routes')(app);
+
+
+var temp = express.Router();
+
+temp.get(function(req, res, next) {
+    res.sender('index');
+});
+
+// call our router we just created
+app.use('/', temp);
+
 require('./lib/config/routes')(app);
 
-//var routes = require('./routes/routes');
-//app.use('/', routes);
+// app.get('/', function(req,res) {
+//   res.sender('index');
+// });
 
 // Start server
 var port = process.env.PORT || 3002;
