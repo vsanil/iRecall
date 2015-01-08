@@ -47,9 +47,11 @@ var pass = require('./lib/config/pass');
 var env = process.env.NODE_ENV || 'development';
 if ('development' == env) {
   // app.use(express.static(path.join(__dirname, '.tmp')));
-  app.use(express.static(path.join(__dirname, 'www')));
+  app.use(express.static(__dirname + '/www'));
+  //app.use(express.static(path.join(__dirname, 'www')));
   app.use(errorHandler());
   app.set('views', __dirname + '/www');
+  console.log("inside development");
 }
 
  app.engine('html', require('ejs').renderFile);
