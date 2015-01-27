@@ -17,6 +17,14 @@ var express = require('express'),
 
 //var connect = require('connect');
 var app = express();
+console.log("before app.all()...");
+app.all('/*', function(req, res, next) {
+  console.log("inside app.all()...");
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,X-Requested-With');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,HEAD,DELETE,OPTIONS');
+    next();
+});
 
 // Connect to database
 var db = require('./lib/db/mongo').db;
@@ -80,9 +88,9 @@ app.use(session({
   store: new mongoStore({
     url: config.db,
     collection: 'sessions'
-  }),
-  resave: true,
-  saveUninitialized: true
+  })
+  , resave: false,
+  saveUninitialized: false
 }));
 
 // use passport session
@@ -96,14 +104,14 @@ app.use(passport.session());
 // require('./lib/config/routes')(app);
 
 
-var temp = express.Router();
+// var temp = express.Router();
 
-temp.get(function(req, res, next) {
-    res.sender('index');
-});
+// temp.get(function(req, res, next) {
+//     res.sender('index');
+// });
 
 // call our router we just created
-app.use('/', temp);
+//app.use('/', temp);
 
 require('./lib/config/routes')(app);
 
